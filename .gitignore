@@ -1,0 +1,3 @@
+deploy_logs/
+site/public/config.local.php
+*.log

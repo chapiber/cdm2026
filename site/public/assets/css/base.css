@@ -1,0 +1,33 @@
+:root {
+  --pc-bg: #f4f7fb;
+  --pc-surface: #ffffff;
+  --pc-text: #14212e;
+  --pc-muted: #5a6d7d;
+  --pc-accent: #0d7ea8;
+  --pc-border: #d8e3ec;
+  --pc-tap-min: 44px;
+  --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.4;
+  color: var(--pc-text);
+  background: var(--pc-bg);
+}
