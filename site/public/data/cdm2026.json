@@ -1,6 +1,6 @@
 {
   "meta": {
-    "updatedAt": "2026-06-17T06:00:03.197Z",
+    "updatedAt": "2026-06-17T08:00:03.365Z",
     "updatedBy": "cloud",
     "sources": [
       "espn.com",
@@ -791,22 +791,22 @@
         },
         {
           "team": "AUT",
-          "played": 0,
-          "won": 0,
+          "played": 1,
+          "won": 1,
           "drawn": 0,
           "lost": 0,
-          "gf": 0,
-          "ga": 0,
-          "pts": 0
+          "gf": 3,
+          "ga": 1,
+          "pts": 3
         },
         {
           "team": "JOR",
-          "played": 0,
+          "played": 1,
           "won": 0,
           "drawn": 0,
-          "lost": 0,
-          "gf": 0,
-          "ga": 0,
+          "lost": 1,
+          "gf": 1,
+          "ga": 3,
           "pts": 0
         },
         {
@@ -1351,9 +1351,9 @@
         "freeToAir": false
       },
       "score": {
-        "home": null,
-        "away": null,
-        "status": "scheduled"
+        "home": 3,
+        "away": 1,
+        "status": "finished"
       }
     },
     {
