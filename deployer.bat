@@ -27,23 +27,24 @@ if not exist "%DEST_BASE%" (
   mkdir "%DEST_BASE%" 2>nul
 )
 
-(
-  echo [INFO] Deploy front apps/cdm2026...
-  robocopy "%PUBLIC%" "%DEST_APP%" /MIR /R:2 /W:3 /XD ".git" "deploy_logs" /XF "config.local.php" /NFL /NDL /NJH /NJS /NC /NS /NP
-  set "RC1=!ERRORLEVEL!"
+if not exist "%DEST_APP%" mkdir "%DEST_APP%" 2>nul
+if not exist "%DEST_API%" mkdir "%DEST_API%" 2>nul
 
-  echo [INFO] Deploy API api/cdm2026...
-  robocopy "%API%" "%DEST_API%" /MIR /R:2 /W:3 /XD ".git" /NFL /NDL /NJH /NJS /NC /NS /NP
-  set "RC2=!ERRORLEVEL!"
-) >>"%LOGFILE%" 2>&1
+echo [INFO] Deploy front apps/cdm2026...
+robocopy "%PUBLIC%" "%DEST_APP%" /MIR /R:2 /W:3 /XD ".git" "deploy_logs" /XF "config.local.php" /NFL /NDL /NJH /NJS /NC /NS /NP >>"%LOGFILE%" 2>&1
+set "RC1=%ERRORLEVEL%"
 
-if !RC1! GEQ 8 (
-  echo [ERREUR] Robocopy front code !RC1! — voir %LOGFILE%
-  exit /b !RC1!
+echo [INFO] Deploy API api/cdm2026...
+robocopy "%API%" "%DEST_API%" /MIR /R:2 /W:3 /XD ".git" /NFL /NDL /NJH /NJS /NC /NS /NP >>"%LOGFILE%" 2>&1
+set "RC2=%ERRORLEVEL%"
+
+if %RC1% GEQ 8 (
+  echo [ERREUR] Robocopy front code %RC1% — voir %LOGFILE%
+  exit /b %RC1%
 )
-if !RC2! GEQ 8 (
-  echo [ERREUR] Robocopy API code !RC2! — voir %LOGFILE%
-  exit /b !RC2!
+if %RC2% GEQ 8 (
+  echo [ERREUR] Robocopy API code %RC2% — voir %LOGFILE%
+  exit /b %RC2%
 )
 
 echo [INFO] Cache-bust __BUILD_VERSION__ = %LOGTS%...
