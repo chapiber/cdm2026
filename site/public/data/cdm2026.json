@@ -1,6 +1,6 @@
 {
   "meta": {
-    "updatedAt": "2026-06-16T05:23:15.225Z",
+    "updatedAt": "2026-06-17T04:44:10.953Z",
     "updatedBy": "cloud",
     "sources": [
       "espn.com",
@@ -729,43 +729,43 @@
       ],
       "standings": [
         {
-          "team": "FRA",
-          "played": 0,
-          "won": 0,
+          "team": "NOR",
+          "played": 1,
+          "won": 1,
           "drawn": 0,
           "lost": 0,
-          "gf": 0,
-          "ga": 0,
-          "pts": 0
+          "gf": 4,
+          "ga": 1,
+          "pts": 3
+        },
+        {
+          "team": "FRA",
+          "played": 1,
+          "won": 1,
+          "drawn": 0,
+          "lost": 0,
+          "gf": 3,
+          "ga": 1,
+          "pts": 3
         },
         {
           "team": "SEN",
-          "played": 0,
+          "played": 1,
           "won": 0,
           "drawn": 0,
-          "lost": 0,
-          "gf": 0,
-          "ga": 0,
-          "pts": 0
-        },
-        {
-          "team": "NOR",
-          "played": 0,
-          "won": 0,
-          "drawn": 0,
-          "lost": 0,
-          "gf": 0,
-          "ga": 0,
+          "lost": 1,
+          "gf": 1,
+          "ga": 3,
           "pts": 0
         },
         {
           "team": "IRQ",
-          "played": 0,
+          "played": 1,
           "won": 0,
           "drawn": 0,
-          "lost": 0,
-          "gf": 0,
-          "ga": 0,
+          "lost": 1,
+          "gf": 1,
+          "ga": 4,
           "pts": 0
         }
       ]
@@ -781,26 +781,16 @@
       "standings": [
         {
           "team": "ARG",
-          "played": 0,
-          "won": 0,
+          "played": 1,
+          "won": 1,
           "drawn": 0,
           "lost": 0,
-          "gf": 0,
+          "gf": 3,
           "ga": 0,
-          "pts": 0
+          "pts": 3
         },
         {
           "team": "AUT",
-          "played": 0,
-          "won": 0,
-          "drawn": 0,
-          "lost": 0,
-          "gf": 0,
-          "ga": 0,
-          "pts": 0
-        },
-        {
-          "team": "ALG",
           "played": 0,
           "won": 0,
           "drawn": 0,
@@ -817,6 +807,16 @@
           "lost": 0,
           "gf": 0,
           "ga": 0,
+          "pts": 0
+        },
+        {
+          "team": "ALG",
+          "played": 1,
+          "won": 0,
+          "drawn": 0,
+          "lost": 1,
+          "gf": 0,
+          "ga": 3,
           "pts": 0
         }
       ]
@@ -1287,9 +1287,9 @@
         "freeToAir": true
       },
       "score": {
-        "home": null,
-        "away": null,
-        "status": "scheduled"
+        "home": 3,
+        "away": 1,
+        "status": "finished"
       }
     },
     {
@@ -1309,9 +1309,9 @@
         "freeToAir": true
       },
       "score": {
-        "home": null,
-        "away": null,
-        "status": "scheduled"
+        "home": 1,
+        "away": 4,
+        "status": "finished"
       }
     },
     {
@@ -1330,9 +1330,9 @@
         "freeToAir": false
       },
       "score": {
-        "home": null,
-        "away": null,
-        "status": "scheduled"
+        "home": 3,
+        "away": 0,
+        "status": "finished"
       }
     },
     {
