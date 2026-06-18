@@ -1,6 +1,6 @@
 {
   "meta": {
-    "updatedAt": "2026-06-17T22:00:07.809Z",
+    "updatedAt": "2026-06-18T00:00:03.544Z",
     "updatedBy": "cloud",
     "sources": [
       "espn.com",
@@ -883,23 +883,13 @@
       "standings": [
         {
           "team": "ENG",
-          "played": 0,
-          "won": 0,
+          "played": 1,
+          "won": 1,
           "drawn": 0,
           "lost": 0,
-          "gf": 0,
-          "ga": 0,
-          "pts": 0
-        },
-        {
-          "team": "CRO",
-          "played": 0,
-          "won": 0,
-          "drawn": 0,
-          "lost": 0,
-          "gf": 0,
-          "ga": 0,
-          "pts": 0
+          "gf": 4,
+          "ga": 2,
+          "pts": 3
         },
         {
           "team": "PAN",
@@ -919,6 +909,16 @@
           "lost": 0,
           "gf": 0,
           "ga": 0,
+          "pts": 0
+        },
+        {
+          "team": "CRO",
+          "played": 1,
+          "won": 0,
+          "drawn": 0,
+          "lost": 1,
+          "gf": 2,
+          "ga": 4,
           "pts": 0
         }
       ]
@@ -1394,9 +1394,9 @@
         "freeToAir": true
       },
       "score": {
-        "home": null,
-        "away": null,
-        "status": "scheduled"
+        "home": 4,
+        "away": 2,
+        "status": "finished"
       }
     },
     {
