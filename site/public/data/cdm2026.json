@@ -1,6 +1,6 @@
 {
   "meta": {
-    "updatedAt": "2026-06-18T04:00:03.049Z",
+    "updatedAt": "2026-06-18T06:00:03.187Z",
     "updatedBy": "cloud",
     "sources": [
       "espn.com",
@@ -831,6 +831,16 @@
       ],
       "standings": [
         {
+          "team": "COL",
+          "played": 1,
+          "won": 1,
+          "drawn": 0,
+          "lost": 0,
+          "gf": 3,
+          "ga": 1,
+          "pts": 3
+        },
+        {
           "team": "POR",
           "played": 1,
           "won": 0,
@@ -851,23 +861,13 @@
           "pts": 1
         },
         {
-          "team": "COL",
-          "played": 0,
-          "won": 0,
-          "drawn": 0,
-          "lost": 0,
-          "gf": 0,
-          "ga": 0,
-          "pts": 0
-        },
-        {
           "team": "UZB",
-          "played": 0,
+          "played": 1,
           "won": 0,
           "drawn": 0,
-          "lost": 0,
-          "gf": 0,
-          "ga": 0,
+          "lost": 1,
+          "gf": 1,
+          "ga": 3,
           "pts": 0
         }
       ]
@@ -1437,9 +1437,9 @@
         "freeToAir": false
       },
       "score": {
-        "home": null,
-        "away": null,
-        "status": "scheduled"
+        "home": 1,
+        "away": 3,
+        "status": "finished"
       }
     },
     {
