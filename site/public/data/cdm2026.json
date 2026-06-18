@@ -1,6 +1,6 @@
 {
   "meta": {
-    "updatedAt": "2026-06-18T18:00:04.183Z",
+    "updatedAt": "2026-06-18T20:00:03.525Z",
     "updatedBy": "cloud",
     "sources": [
       "espn.com",
@@ -342,23 +342,23 @@
         },
         {
           "team": "CZE",
-          "played": 1,
+          "played": 2,
           "won": 0,
-          "drawn": 0,
+          "drawn": 1,
           "lost": 1,
-          "gf": 1,
-          "ga": 2,
-          "pts": 0
+          "gf": 2,
+          "ga": 3,
+          "pts": 1
         },
         {
           "team": "RSA",
-          "played": 1,
+          "played": 2,
           "won": 0,
-          "drawn": 0,
+          "drawn": 1,
           "lost": 1,
-          "gf": 0,
-          "ga": 2,
-          "pts": 0
+          "gf": 1,
+          "ga": 3,
+          "pts": 1
         }
       ]
     },
@@ -1459,9 +1459,9 @@
         "freeToAir": true
       },
       "score": {
-        "home": null,
-        "away": null,
-        "status": "scheduled"
+        "home": 1,
+        "away": 1,
+        "status": "finished"
       }
     },
     {
