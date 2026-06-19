@@ -1,6 +1,6 @@
 {
   "meta": {
-    "updatedAt": "2026-06-19T02:00:03.167Z",
+    "updatedAt": "2026-06-19T04:00:05.344Z",
     "updatedBy": "cloud",
     "sources": [
       "espn.com",
@@ -322,22 +322,22 @@
       "standings": [
         {
           "team": "MEX",
-          "played": 1,
-          "won": 1,
+          "played": 2,
+          "won": 2,
           "drawn": 0,
           "lost": 0,
-          "gf": 2,
+          "gf": 3,
           "ga": 0,
-          "pts": 3
+          "pts": 6
         },
         {
           "team": "KOR",
-          "played": 1,
+          "played": 2,
           "won": 1,
           "drawn": 0,
-          "lost": 0,
+          "lost": 1,
           "gf": 2,
-          "ga": 1,
+          "ga": 2,
           "pts": 3
         },
         {
@@ -1523,9 +1523,9 @@
         "freeToAir": false
       },
       "score": {
-        "home": null,
-        "away": null,
-        "status": "scheduled"
+        "home": 1,
+        "away": 0,
+        "status": "finished"
       }
     },
     {
