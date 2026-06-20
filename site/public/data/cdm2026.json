@@ -1,6 +1,6 @@
 {
   "meta": {
-    "updatedAt": "2026-06-20T18:00:03.178Z",
+    "updatedAt": "2026-06-20T20:00:05.071Z",
     "updatedBy": "cloud",
     "sources": [
       "espn.com",
@@ -576,24 +576,24 @@
       ],
       "standings": [
         {
-          "team": "SWE",
-          "played": 1,
-          "won": 1,
-          "drawn": 0,
-          "lost": 0,
-          "gf": 5,
-          "ga": 1,
-          "pts": 3
-        },
-        {
           "team": "NED",
-          "played": 1,
-          "won": 0,
+          "played": 2,
+          "won": 1,
           "drawn": 1,
           "lost": 0,
-          "gf": 2,
-          "ga": 2,
-          "pts": 1
+          "gf": 7,
+          "ga": 3,
+          "pts": 4
+        },
+        {
+          "team": "SWE",
+          "played": 2,
+          "won": 1,
+          "drawn": 0,
+          "lost": 1,
+          "gf": 6,
+          "ga": 6,
+          "pts": 3
         },
         {
           "team": "JPN",
@@ -1674,9 +1674,9 @@
         "freeToAir": true
       },
       "score": {
-        "home": null,
-        "away": null,
-        "status": "scheduled"
+        "home": 5,
+        "away": 1,
+        "status": "finished"
       }
     },
     {
