@@ -1,6 +1,6 @@
 {
   "meta": {
-    "updatedAt": "2026-06-21T20:00:03.158Z",
+    "updatedAt": "2026-06-21T22:00:03.705Z",
     "updatedBy": "cloud",
     "sources": [
       "espn.com",
@@ -628,13 +628,23 @@
       "standings": [
         {
           "team": "IRN",
-          "played": 1,
+          "played": 2,
           "won": 0,
-          "drawn": 1,
+          "drawn": 2,
           "lost": 0,
           "gf": 2,
           "ga": 2,
-          "pts": 1
+          "pts": 2
+        },
+        {
+          "team": "BEL",
+          "played": 2,
+          "won": 0,
+          "drawn": 2,
+          "lost": 0,
+          "gf": 1,
+          "ga": 1,
+          "pts": 2
         },
         {
           "team": "NZL",
@@ -644,16 +654,6 @@
           "lost": 0,
           "gf": 2,
           "ga": 2,
-          "pts": 1
-        },
-        {
-          "team": "BEL",
-          "played": 1,
-          "won": 0,
-          "drawn": 1,
-          "lost": 0,
-          "gf": 1,
-          "ga": 1,
           "pts": 1
         },
         {
@@ -1760,9 +1760,9 @@
         "freeToAir": true
       },
       "score": {
-        "home": null,
-        "away": null,
-        "status": "scheduled"
+        "home": 0,
+        "away": 0,
+        "status": "finished"
       }
     },
     {
