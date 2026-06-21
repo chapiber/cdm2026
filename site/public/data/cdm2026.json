@@ -1,6 +1,6 @@
 {
   "meta": {
-    "updatedAt": "2026-06-21T18:00:02.983Z",
+    "updatedAt": "2026-06-21T20:00:03.158Z",
     "updatedBy": "cloud",
     "sources": [
       "espn.com",
@@ -678,6 +678,16 @@
       ],
       "standings": [
         {
+          "team": "ESP",
+          "played": 2,
+          "won": 1,
+          "drawn": 1,
+          "lost": 0,
+          "gf": 4,
+          "ga": 0,
+          "pts": 4
+        },
+        {
           "team": "URU",
           "played": 1,
           "won": 0,
@@ -688,26 +698,6 @@
           "pts": 1
         },
         {
-          "team": "KSA",
-          "played": 1,
-          "won": 0,
-          "drawn": 1,
-          "lost": 0,
-          "gf": 1,
-          "ga": 1,
-          "pts": 1
-        },
-        {
-          "team": "ESP",
-          "played": 1,
-          "won": 0,
-          "drawn": 1,
-          "lost": 0,
-          "gf": 0,
-          "ga": 0,
-          "pts": 1
-        },
-        {
           "team": "CPV",
           "played": 1,
           "won": 0,
@@ -715,6 +705,16 @@
           "lost": 0,
           "gf": 0,
           "ga": 0,
+          "pts": 1
+        },
+        {
+          "team": "KSA",
+          "played": 2,
+          "won": 0,
+          "drawn": 1,
+          "lost": 1,
+          "gf": 1,
+          "ga": 5,
           "pts": 1
         }
       ]
@@ -1738,9 +1738,9 @@
         "freeToAir": true
       },
       "score": {
-        "home": null,
-        "away": null,
-        "status": "scheduled"
+        "home": 4,
+        "away": 0,
+        "status": "finished"
       }
     },
     {
