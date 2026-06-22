@@ -1,6 +1,6 @@
 {
   "meta": {
-    "updatedAt": "2026-06-22T18:00:16.980Z",
+    "updatedAt": "2026-06-22T20:00:03.505Z",
     "updatedBy": "cloud",
     "sources": [
       "espn.com",
@@ -781,22 +781,22 @@
       "standings": [
         {
           "team": "ARG",
-          "played": 1,
-          "won": 1,
+          "played": 2,
+          "won": 2,
           "drawn": 0,
           "lost": 0,
-          "gf": 3,
+          "gf": 5,
           "ga": 0,
-          "pts": 3
+          "pts": 6
         },
         {
           "team": "AUT",
-          "played": 1,
+          "played": 2,
           "won": 1,
           "drawn": 0,
-          "lost": 0,
+          "lost": 1,
           "gf": 3,
-          "ga": 1,
+          "ga": 3,
           "pts": 3
         },
         {
@@ -1846,9 +1846,9 @@
         "freeToAir": true
       },
       "score": {
-        "home": null,
-        "away": null,
-        "status": "scheduled"
+        "home": 2,
+        "away": 0,
+        "status": "finished"
       }
     },
     {
