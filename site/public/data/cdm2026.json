@@ -1,6 +1,6 @@
 {
   "meta": {
-    "updatedAt": "2026-06-22T02:00:03.328Z",
+    "updatedAt": "2026-06-22T04:00:03.128Z",
     "updatedBy": "cloud",
     "sources": [
       "espn.com",
@@ -627,6 +627,16 @@
       ],
       "standings": [
         {
+          "team": "EGY",
+          "played": 2,
+          "won": 1,
+          "drawn": 1,
+          "lost": 0,
+          "gf": 4,
+          "ga": 2,
+          "pts": 4
+        },
+        {
           "team": "IRN",
           "played": 2,
           "won": 0,
@@ -648,22 +658,12 @@
         },
         {
           "team": "NZL",
-          "played": 1,
+          "played": 2,
           "won": 0,
           "drawn": 1,
-          "lost": 0,
-          "gf": 2,
-          "ga": 2,
-          "pts": 1
-        },
-        {
-          "team": "EGY",
-          "played": 1,
-          "won": 0,
-          "drawn": 1,
-          "lost": 0,
-          "gf": 1,
-          "ga": 1,
+          "lost": 1,
+          "gf": 3,
+          "ga": 5,
           "pts": 1
         }
       ]
@@ -1781,9 +1781,9 @@
         "freeToAir": false
       },
       "score": {
-        "home": null,
-        "away": null,
-        "status": "scheduled"
+        "home": 1,
+        "away": 3,
+        "status": "finished"
       }
     },
     {
