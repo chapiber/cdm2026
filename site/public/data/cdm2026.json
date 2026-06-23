@@ -1,6 +1,6 @@
 {
   "meta": {
-    "updatedAt": "2026-06-23T04:00:03.923Z",
+    "updatedAt": "2026-06-23T06:00:03.021Z",
     "updatedBy": "cloud",
     "sources": [
       "espn.com",
@@ -800,23 +800,23 @@
           "pts": 3
         },
         {
-          "team": "JOR",
-          "played": 1,
-          "won": 0,
+          "team": "ALG",
+          "played": 2,
+          "won": 1,
           "drawn": 0,
           "lost": 1,
-          "gf": 1,
-          "ga": 3,
-          "pts": 0
+          "gf": 2,
+          "ga": 4,
+          "pts": 3
         },
         {
-          "team": "ALG",
-          "played": 1,
+          "team": "JOR",
+          "played": 2,
           "won": 0,
           "drawn": 0,
-          "lost": 1,
-          "gf": 0,
-          "ga": 3,
+          "lost": 2,
+          "gf": 2,
+          "ga": 5,
           "pts": 0
         }
       ]
@@ -1867,9 +1867,9 @@
         "freeToAir": false
       },
       "score": {
-        "home": null,
-        "away": null,
-        "status": "scheduled"
+        "home": 1,
+        "away": 2,
+        "status": "finished"
       }
     },
     {
