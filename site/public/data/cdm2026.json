@@ -1,6 +1,6 @@
 {
   "meta": {
-    "updatedAt": "2026-06-24T00:00:03.283Z",
+    "updatedAt": "2026-06-24T02:00:03.310Z",
     "updatedBy": "cloud",
     "sources": [
       "espn.com",
@@ -902,23 +902,23 @@
           "pts": 4
         },
         {
-          "team": "PAN",
-          "played": 1,
-          "won": 0,
+          "team": "CRO",
+          "played": 2,
+          "won": 1,
           "drawn": 0,
           "lost": 1,
-          "gf": 0,
-          "ga": 1,
-          "pts": 0
+          "gf": 3,
+          "ga": 4,
+          "pts": 3
         },
         {
-          "team": "CRO",
-          "played": 1,
+          "team": "PAN",
+          "played": 2,
           "won": 0,
           "drawn": 0,
-          "lost": 1,
-          "gf": 2,
-          "ga": 4,
+          "lost": 2,
+          "gf": 0,
+          "ga": 2,
           "pts": 0
         }
       ]
@@ -1910,9 +1910,9 @@
         "freeToAir": false
       },
       "score": {
-        "home": null,
-        "away": null,
-        "status": "scheduled"
+        "home": 0,
+        "away": 1,
+        "status": "finished"
       }
     },
     {
