@@ -1,6 +1,6 @@
 {
   "meta": {
-    "updatedAt": "2026-06-24T20:00:04.423Z",
+    "updatedAt": "2026-06-24T22:00:03.732Z",
     "updatedBy": "cloud",
     "sources": [
       "espn.com",
@@ -372,43 +372,43 @@
       ],
       "standings": [
         {
-          "team": "CAN",
-          "played": 2,
-          "won": 1,
+          "team": "SUI",
+          "played": 3,
+          "won": 2,
           "drawn": 1,
           "lost": 0,
           "gf": 7,
-          "ga": 1,
-          "pts": 4
+          "ga": 3,
+          "pts": 7
         },
         {
-          "team": "SUI",
-          "played": 2,
+          "team": "CAN",
+          "played": 3,
           "won": 1,
           "drawn": 1,
-          "lost": 0,
-          "gf": 5,
-          "ga": 2,
+          "lost": 1,
+          "gf": 8,
+          "ga": 3,
           "pts": 4
         },
         {
           "team": "BIH",
-          "played": 2,
-          "won": 0,
+          "played": 3,
+          "won": 1,
           "drawn": 1,
           "lost": 1,
-          "gf": 2,
-          "ga": 5,
-          "pts": 1
+          "gf": 5,
+          "ga": 6,
+          "pts": 4
         },
         {
           "team": "QAT",
-          "played": 2,
+          "played": 3,
           "won": 0,
           "drawn": 1,
-          "lost": 1,
-          "gf": 1,
-          "ga": 7,
+          "lost": 2,
+          "gf": 2,
+          "ga": 10,
           "pts": 1
         }
       ]
@@ -2019,9 +2019,9 @@
         "freeToAir": true
       },
       "score": {
-        "home": null,
-        "away": null,
-        "status": "scheduled"
+        "home": 2,
+        "away": 1,
+        "status": "finished"
       }
     },
     {
@@ -2040,9 +2040,9 @@
         "freeToAir": false
       },
       "score": {
-        "home": null,
-        "away": null,
-        "status": "scheduled"
+        "home": 3,
+        "away": 1,
+        "status": "finished"
       }
     },
     {
