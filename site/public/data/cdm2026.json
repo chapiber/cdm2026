@@ -1,6 +1,6 @@
 {
   "meta": {
-    "updatedAt": "2026-06-25T02:00:03.728Z",
+    "updatedAt": "2026-06-25T04:00:03.722Z",
     "updatedBy": "cloud",
     "sources": [
       "espn.com",
@@ -322,42 +322,42 @@
       "standings": [
         {
           "team": "MEX",
-          "played": 2,
-          "won": 2,
+          "played": 3,
+          "won": 3,
           "drawn": 0,
           "lost": 0,
-          "gf": 3,
+          "gf": 6,
           "ga": 0,
-          "pts": 6
+          "pts": 9
+        },
+        {
+          "team": "RSA",
+          "played": 3,
+          "won": 1,
+          "drawn": 1,
+          "lost": 1,
+          "gf": 2,
+          "ga": 3,
+          "pts": 4
         },
         {
           "team": "KOR",
-          "played": 2,
+          "played": 3,
           "won": 1,
           "drawn": 0,
-          "lost": 1,
+          "lost": 2,
           "gf": 2,
-          "ga": 2,
+          "ga": 3,
           "pts": 3
         },
         {
           "team": "CZE",
-          "played": 2,
+          "played": 3,
           "won": 0,
           "drawn": 1,
-          "lost": 1,
+          "lost": 2,
           "gf": 2,
-          "ga": 3,
-          "pts": 1
-        },
-        {
-          "team": "RSA",
-          "played": 2,
-          "won": 0,
-          "drawn": 1,
-          "lost": 1,
-          "gf": 1,
-          "ga": 3,
+          "ga": 6,
           "pts": 1
         }
       ]
@@ -2061,9 +2061,9 @@
         "freeToAir": false
       },
       "score": {
-        "home": null,
-        "away": null,
-        "status": "scheduled"
+        "home": 0,
+        "away": 3,
+        "status": "finished"
       }
     },
     {
@@ -2082,9 +2082,9 @@
         "freeToAir": false
       },
       "score": {
-        "home": null,
-        "away": null,
-        "status": "scheduled"
+        "home": 1,
+        "away": 0,
+        "status": "finished"
       }
     },
     {
