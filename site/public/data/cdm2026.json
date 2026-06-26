@@ -1,6 +1,6 @@
 {
   "meta": {
-    "updatedAt": "2026-06-26T00:00:03.388Z",
+    "updatedAt": "2026-06-26T02:00:03.747Z",
     "updatedBy": "cloud",
     "sources": [
       "espn.com",
@@ -577,42 +577,42 @@
       "standings": [
         {
           "team": "NED",
-          "played": 2,
-          "won": 1,
+          "played": 3,
+          "won": 2,
           "drawn": 1,
           "lost": 0,
-          "gf": 7,
-          "ga": 3,
-          "pts": 4
+          "gf": 10,
+          "ga": 4,
+          "pts": 7
         },
         {
           "team": "JPN",
-          "played": 2,
+          "played": 3,
           "won": 1,
-          "drawn": 1,
+          "drawn": 2,
           "lost": 0,
-          "gf": 6,
-          "ga": 2,
-          "pts": 4
+          "gf": 7,
+          "ga": 3,
+          "pts": 5
         },
         {
           "team": "SWE",
-          "played": 2,
+          "played": 3,
           "won": 1,
-          "drawn": 0,
+          "drawn": 1,
           "lost": 1,
-          "gf": 6,
-          "ga": 6,
-          "pts": 3
+          "gf": 7,
+          "ga": 7,
+          "pts": 4
         },
         {
           "team": "TUN",
-          "played": 2,
+          "played": 3,
           "won": 0,
           "drawn": 0,
-          "lost": 2,
-          "gf": 1,
-          "ga": 9,
+          "lost": 3,
+          "gf": 2,
+          "ga": 12,
           "pts": 0
         }
       ]
@@ -2146,9 +2146,9 @@
         "freeToAir": false
       },
       "score": {
-        "home": null,
-        "away": null,
-        "status": "scheduled"
+        "home": 1,
+        "away": 1,
+        "status": "finished"
       }
     },
     {
@@ -2168,9 +2168,9 @@
         "freeToAir": true
       },
       "score": {
-        "home": null,
-        "away": null,
-        "status": "scheduled"
+        "home": 1,
+        "away": 3,
+        "status": "finished"
       }
     },
     {
