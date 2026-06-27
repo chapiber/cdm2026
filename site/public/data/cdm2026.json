@@ -1,6 +1,6 @@
 {
   "meta": {
-    "updatedAt": "2026-06-27T04:00:03.736Z",
+    "updatedAt": "2026-06-27T06:00:03.353Z",
     "updatedBy": "cloud",
     "sources": [
       "espn.com",
@@ -627,43 +627,43 @@
       ],
       "standings": [
         {
-          "team": "EGY",
-          "played": 2,
+          "team": "BEL",
+          "played": 3,
           "won": 1,
-          "drawn": 1,
+          "drawn": 2,
           "lost": 0,
-          "gf": 4,
+          "gf": 6,
           "ga": 2,
-          "pts": 4
+          "pts": 5
+        },
+        {
+          "team": "EGY",
+          "played": 3,
+          "won": 1,
+          "drawn": 2,
+          "lost": 0,
+          "gf": 5,
+          "ga": 3,
+          "pts": 5
         },
         {
           "team": "IRN",
-          "played": 2,
+          "played": 3,
           "won": 0,
-          "drawn": 2,
+          "drawn": 3,
           "lost": 0,
-          "gf": 2,
-          "ga": 2,
-          "pts": 2
-        },
-        {
-          "team": "BEL",
-          "played": 2,
-          "won": 0,
-          "drawn": 2,
-          "lost": 0,
-          "gf": 1,
-          "ga": 1,
-          "pts": 2
+          "gf": 3,
+          "ga": 3,
+          "pts": 3
         },
         {
           "team": "NZL",
-          "played": 2,
+          "played": 3,
           "won": 0,
           "drawn": 1,
-          "lost": 1,
-          "gf": 3,
-          "ga": 5,
+          "lost": 2,
+          "gf": 4,
+          "ga": 10,
           "pts": 1
         }
       ]
@@ -2275,9 +2275,9 @@
         "freeToAir": false
       },
       "score": {
-        "home": null,
-        "away": null,
-        "status": "scheduled"
+        "home": 1,
+        "away": 1,
+        "status": "finished"
       }
     },
     {
@@ -2296,9 +2296,9 @@
         "freeToAir": false
       },
       "score": {
-        "home": null,
-        "away": null,
-        "status": "scheduled"
+        "home": 1,
+        "away": 5,
+        "status": "finished"
       }
     },
     {
