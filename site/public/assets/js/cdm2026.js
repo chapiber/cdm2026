@@ -21,6 +21,8 @@
     final: 'Finale',
   };
 
+  const KNOCKOUT_STAGES = ['round32', 'round16', 'quarter', 'semi', 'third', 'final'];
+
   const root = document.getElementById('wc-root');
   const toastEl = document.getElementById('wc-toast');
 
@@ -171,6 +173,25 @@
     return m.home === 'FRA' || m.away === 'FRA';
   }
 
+  function isKnockoutMatch(m) {
+    return KNOCKOUT_STAGES.indexOf(m.stage) >= 0;
+  }
+
+  function formatPredScore(pred, m) {
+    if (!pred) return '';
+    let text = pred.pred_home + ' – ' + pred.pred_away;
+    if (
+      pred.pred_home === pred.pred_away &&
+      pred.pred_winner &&
+      m &&
+      isKnockoutMatch(m)
+    ) {
+      const t = teamByCode(pred.pred_winner);
+      text += ' · ' + (t ? t.name : pred.pred_winner);
+    }
+    return text;
+  }
+
   function matchHasTeams(m) {
     return !!(m.home && m.away);
   }
@@ -232,6 +253,11 @@
       if (addDaysToParisDateKey(todayKey, offset) === dayKey) return offset;
     }
     return -1;
+  }
+
+  function matchMetaById(matchId) {
+    if (!state.data) return null;
+    return state.data.matches.find((m) => m.id === matchId) || null;
   }
 
   function matchShortLabel(m) {
@@ -574,7 +600,7 @@
       html +=
         '<div class="wc-predict-result__pred">' +
         '<span class="wc-predict-result__label">Votre prono</span>' +
-        '<strong class="wc-predict-result__score">' + pred.pred_home + ' – ' + pred.pred_away + '</strong>';
+        '<strong class="wc-predict-result__score">' + esc(formatPredScore(pred, m)) + '</strong>';
       if (cmpLabel) {
         html += '<span class="wc-predict-result__cmp">' + esc(cmpLabel) + '</span>';
       }
@@ -604,6 +630,85 @@
   }
 
   function renderTeamSide(code, align) {
+    const t = teamByCode(code);
+    if (!t) return '<div class="wc-team"></div>';
+    return (
+      '<div class="wc-team wc-team--' + align + '">' +
+      '<img class="wc-team__flag" src="' + esc(flagUrl(t.flagIso)) + '" alt="" width="40" height="27" loading="lazy">' +
+      '<span class="wc-team__name">' + esc(t.name) + '</span>' +
+      '</div>'
+    );
+  }
+
+  function renderPredictWinnerPicker(m, pred, locked) {
+    if (!isKnockoutMatch(m) || !matchHasTeams(m) || locked) return '';
+    const predWinner = pred && pred.pred_winner ? pred.pred_winner : '';
+    const showPicker = pred && pred.pred_home === pred.pred_away;
+
+    function winnerBtn(code) {
+      const t = teamByCode(code);
+      if (!t) return '';
+      const selected = predWinner === code;
+      return (
+        '<button type="button" class="wc-predict-winner__btn' + (selected ? ' wc-predict-winner__btn--selected' : '') + '"' +
+        ' data-action="pred-winner" data-match="' + esc(m.id) + '" data-winner="' + esc(code) + '"' +
+        ' aria-pressed="' + (selected ? 'true' : 'false') + '"' +
+        (locked ? ' disabled' : '') + '>' +
+        '<img class="wc-predict-winner__flag" src="' + esc(flagUrl(t.flagIso)) + '" alt="" width="24" height="16" loading="lazy">' +
+        '<span class="wc-predict-winner__name">' + esc(t.name) + '</span>' +
+        '</button>'
+      );
+    }
+
+    return (
+      '<div class="wc-predict-winner" data-match="' + esc(m.id) + '"' + (showPicker ? '' : ' hidden') + '>' +
+      '<p class="wc-predict-winner__label">Vainqueur si match nul <span class="wc-predict-winner__hint">(prolongations / TAB)</span></p>' +
+      '<div class="wc-predict-winner__choices" role="radiogroup" aria-label="Vainqueur en cas de match nul">' +
+      winnerBtn(m.home) +
+      winnerBtn(m.away) +
+      '</div>' +
+      '</div>'
+    );
+  }
+
+  function updatePredictWinnerVisibility(card) {
+    if (!card) return;
+    const homeInput = card.querySelector('[data-side="home"]');
+    const awayInput = card.querySelector('[data-side="away"]');
+    const block = card.querySelector('.wc-predict-winner');
+    if (!block || !homeInput || !awayInput) return;
+    const home = parseInt(homeInput.value, 10);
+    const away = parseInt(awayInput.value, 10);
+    const equal = homeInput.value !== '' && awayInput.value !== '' && !Number.isNaN(home) && !Number.isNaN(away) && home === away;
+    block.hidden = !equal;
+    if (!equal) {
+      block.querySelectorAll('.wc-predict-winner__btn').forEach((btn) => {
+        btn.setAttribute('aria-pressed', 'false');
+        btn.classList.remove('wc-predict-winner__btn--selected');
+      });
+    }
+  }
+
+  function readPredictCard(card) {
+    const matchId = card.getAttribute('data-match-id');
+    if (!matchId) return null;
+    const homeInput = card.querySelector('[data-side="home"]');
+    const awayInput = card.querySelector('[data-side="away"]');
+    if (!homeInput || !awayInput) return null;
+    if (homeInput.value === '' || awayInput.value === '') return null;
+    const home = parseInt(homeInput.value, 10);
+    const away = parseInt(awayInput.value, 10);
+    if (Number.isNaN(home) || Number.isNaN(away) || home < 0 || home > 15 || away < 0 || away > 15) return null;
+
+    const m = state.data.matches.find((item) => item.id === matchId);
+    let predWinner = null;
+    if (m && isKnockoutMatch(m) && home === away) {
+      const selected = card.querySelector('.wc-predict-winner__btn[aria-pressed="true"]');
+      if (!selected) return { incomplete: true, matchId, home, away };
+      predWinner = selected.getAttribute('data-winner');
+    }
+    return { matchId, home, away, predWinner };
+  }
     const t = teamByCode(code);
     if (!t) return '<div class="wc-team"></div>';
     return (
@@ -750,7 +855,8 @@
         '<input type="number" class="wc-predict-input" data-match="' + esc(m.id) + '" data-side="away" min="0" max="15" inputmode="numeric" value="' + esc(String(predAway)) + '"' + (locked ? ' disabled' : '') + ' aria-label="Score extérieur">' +
         '</div>' +
         renderTeamSide(m.away, 'away') +
-        '</div>';
+        '</div>' +
+        renderPredictWinnerPicker(m, pred, locked);
     }
 
     let focusAttr = '';
@@ -1138,7 +1244,7 @@
         table +=
           '<tr class="' + mine + '">' +
           '<td>' + esc(row.pseudo) + '</td>' +
-          '<td><strong>' + row.pred_home + ' – ' + row.pred_away + '</strong></td>' +
+          '<td><strong>' + esc(formatPredScore(row, { stage: board.stage, home: board.home, away: board.away })) + '</strong></td>' +
           '<td><strong>' + esc(formatPoints(row.points)) + '</strong></td>' +
           '<td class="wc-board-table__label">' + esc(row.label || '') + '</td>' +
           '</tr>';
@@ -1186,11 +1292,12 @@
           const h = teamByCode(row.home);
           const a = teamByCode(row.away);
           const label = (h ? h.name : row.home) + ' – ' + (a ? a.name : row.away);
+          const m = matchMetaById(row.match_id) || { stage: 'group', home: row.home, away: row.away };
           table +=
             '<tr>' +
             '<td>' + esc(label) + '</td>' +
             '<td>' + row.result.home + '–' + row.result.away + '</td>' +
-            '<td><strong>' + row.pred_home + '–' + row.pred_away + '</strong></td>' +
+            '<td><strong>' + esc(formatPredScore(row, m)) + '</strong></td>' +
             '<td><strong>' + esc(formatPoints(row.points)) + '</strong> <span class="wc-board-table__label">' + esc(row.label || '') + '</span></td>' +
             '</tr>';
         });
@@ -1251,7 +1358,8 @@
       '<span class="wc-predict-legend__icon" aria-hidden="true">✓</span> Terminé</span>' +
       '<span class="wc-predict-legend__item wc-predict-legend__item--saved">' +
       '<span class="wc-predict-legend__icon" aria-hidden="true">◎</span> Prono en attente</span>' +
-      '</div>';
+      '</div>' +
+      '<p class="wc-predict-knockout-note">Phases finales : si vous pronostiquez un nul, choisissez le vainqueur (prolongations ou tirs au but).</p>';
 
     if (!dayKeys.length) {
       body += '<div class="wc-empty">Aucun match à pronostiquer.</div>';
@@ -1578,23 +1686,26 @@
     render();
   }
 
-  async function savePrediction(matchId, predHome, predAway) {
+  async function savePrediction(matchId, predHome, predAway, predWinner) {
     const token = getMemberToken();
     if (!token) return;
     try {
+      const payload = {
+        token,
+        match_id: matchId,
+        pred_home: predHome,
+        pred_away: predAway,
+      };
+      if (predWinner) payload.pred_winner = predWinner;
       const data = await api('predictions.php', {
         method: 'PUT',
-        body: JSON.stringify({
-          token,
-          match_id: matchId,
-          pred_home: predHome,
-          pred_away: predAway,
-        }),
+        body: JSON.stringify(payload),
       });
       const p = data.prediction;
       state.predict.predictions[matchId] = {
         pred_home: p.pred_home,
         pred_away: p.pred_away,
+        pred_winner: p.pred_winner || null,
         updated_at: p.updated_at,
       };
       await loadPredictions();
@@ -1610,16 +1721,14 @@
     saveTimers[matchId] = setTimeout(() => {
       const card = root.querySelector('[data-match-id="' + matchId + '"]');
       if (!card) return;
-      const homeInput = card.querySelector('[data-side="home"]');
-      const awayInput = card.querySelector('[data-side="away"]');
-      if (!homeInput || !awayInput) return;
-      const homeVal = homeInput.value;
-      const awayVal = awayInput.value;
-      if (homeVal === '' || awayVal === '') return;
-      const home = parseInt(homeVal, 10);
-      const away = parseInt(awayVal, 10);
-      if (Number.isNaN(home) || Number.isNaN(away) || home < 0 || home > 15 || away < 0 || away > 15) return;
-      savePrediction(matchId, home, away);
+      const payload = readPredictCard(card);
+      if (!payload || payload.incomplete) {
+        if (payload && payload.incomplete) {
+          showToast('Choisissez le vainqueur en cas de nul');
+        }
+        return;
+      }
+      savePrediction(payload.matchId, payload.home, payload.away, payload.predWinner);
     }, 400);
   }
 
@@ -1856,10 +1965,28 @@
     root.querySelectorAll('.wc-predict-input').forEach((input) => {
       input.addEventListener('input', () => {
         const matchId = input.getAttribute('data-match');
+        const card = matchId ? root.querySelector('[data-match-id="' + matchId + '"]') : null;
+        updatePredictWinnerVisibility(card);
         if (matchId) scheduleSave(matchId);
       });
       input.addEventListener('change', () => {
         const matchId = input.getAttribute('data-match');
+        const card = matchId ? root.querySelector('[data-match-id="' + matchId + '"]') : null;
+        updatePredictWinnerVisibility(card);
+        if (matchId) scheduleSave(matchId);
+      });
+    });
+
+    root.querySelectorAll('[data-action="pred-winner"]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const matchId = btn.getAttribute('data-match');
+        const card = matchId ? root.querySelector('[data-match-id="' + matchId + '"]') : null;
+        if (!card) return;
+        card.querySelectorAll('[data-action="pred-winner"]').forEach((other) => {
+          const selected = other === btn;
+          other.setAttribute('aria-pressed', selected ? 'true' : 'false');
+          other.classList.toggle('wc-predict-winner__btn--selected', selected);
+        });
         if (matchId) scheduleSave(matchId);
       });
     });

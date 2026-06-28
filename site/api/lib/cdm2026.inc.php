@@ -219,6 +219,64 @@ function portailClubCdmValidateGoal(mixed $value, string $label): int
     return $n;
 }
 
+function portailClubCdmIsKnockoutStage(string $stage): bool
+{
+    return in_array($stage, ['round32', 'round16', 'quarter', 'semi', 'third', 'final'], true);
+}
+
+/** @return 1 domicile, -1 extérieur, 0 indéterminé (nul sans vainqueur) */
+function portailClubCdmEffectiveWinnerSide(
+    int $home,
+    int $away,
+    ?string $winnerCode,
+    string $matchHome,
+    string $matchAway
+): int {
+    if ($home > $away) {
+        return 1;
+    }
+    if ($home < $away) {
+        return -1;
+    }
+    if ($winnerCode === $matchHome) {
+        return 1;
+    }
+    if ($winnerCode === $matchAway) {
+        return -1;
+    }
+    return 0;
+}
+
+function portailClubCdmMatchResultWinner(array $match): ?string
+{
+    $score = $match['score'] ?? null;
+    if (!is_array($score)) {
+        return null;
+    }
+    $winner = strtoupper(trim((string)($score['winner'] ?? '')));
+    return $winner !== '' ? $winner : null;
+}
+
+function portailClubCdmValidatePredWinner(array $match, int $predHome, int $predAway, mixed $value): ?string
+{
+    $home = trim((string)($match['home'] ?? ''));
+    $away = trim((string)($match['away'] ?? ''));
+    $stage = (string)($match['stage'] ?? '');
+
+    if ($predHome !== $predAway || !portailClubCdmIsKnockoutStage($stage)) {
+        return null;
+    }
+
+    $winner = strtoupper(trim((string)($value ?? '')));
+    if ($winner === '') {
+        portailClubJsonFail('Indiquez le vainqueur en cas de match nul.');
+    }
+    if ($winner !== $home && $winner !== $away) {
+        portailClubJsonFail('Vainqueur invalide pour ce match.');
+    }
+    return $winner;
+}
+
 function portailClubCdmNormalizeMatchId(mixed $value): string
 {
     $id = strtoupper(trim((string)$value));
@@ -228,26 +286,28 @@ function portailClubCdmNormalizeMatchId(mixed $value): string
     return $id;
 }
 
-/** @return array<string, array{pred_home:int,pred_away:int,updated_at:string}> */
+/** @return array<string, array{pred_home:int,pred_away:int,pred_winner:?string,updated_at:string}> */
 function portailClubCdmListPredictionsForMember(PDO $pdo, int $memberId): array
 {
     $st = $pdo->prepare(
-        'SELECT match_id, pred_home, pred_away, updated_at
+        'SELECT match_id, pred_home, pred_away, pred_winner, updated_at
          FROM PORTAIL_CLUB_cdm_predictions WHERE member_id = ?'
     );
     $st->execute([$memberId]);
     $out = [];
     while ($row = $st->fetch()) {
+        $winner = isset($row['pred_winner']) ? trim((string)$row['pred_winner']) : '';
         $out[(string)$row['match_id']] = [
             'pred_home' => (int)$row['pred_home'],
             'pred_away' => (int)$row['pred_away'],
+            'pred_winner' => $winner !== '' ? $winner : null,
             'updated_at' => (string)$row['updated_at'],
         ];
     }
     return $out;
 }
 
-/** @return array{pred_home:int,pred_away:int,updated_at:string} */
+/** @return array{match_id:string,pred_home:int,pred_away:int,pred_winner:?string,updated_at:string} */
 function portailClubCdmUpsertPrediction(PDO $pdo, int $memberId, array $body): array
 {
     $matchId = portailClubCdmNormalizeMatchId($body['match_id'] ?? '');
@@ -264,16 +324,20 @@ function portailClubCdmUpsertPrediction(PDO $pdo, int $memberId, array $body): a
 
     $predHome = portailClubCdmValidateGoal($body['pred_home'] ?? null, 'Score domicile');
     $predAway = portailClubCdmValidateGoal($body['pred_away'] ?? null, 'Score extérieur');
+    $predWinner = portailClubCdmValidatePredWinner($match, $predHome, $predAway, $body['pred_winner'] ?? null);
 
     $st = $pdo->prepare(
-        'INSERT INTO PORTAIL_CLUB_cdm_predictions (member_id, match_id, pred_home, pred_away)
-         VALUES (?, ?, ?, ?)
-         ON DUPLICATE KEY UPDATE pred_home = VALUES(pred_home), pred_away = VALUES(pred_away)'
+        'INSERT INTO PORTAIL_CLUB_cdm_predictions (member_id, match_id, pred_home, pred_away, pred_winner)
+         VALUES (?, ?, ?, ?, ?)
+         ON DUPLICATE KEY UPDATE
+           pred_home = VALUES(pred_home),
+           pred_away = VALUES(pred_away),
+           pred_winner = VALUES(pred_winner)'
     );
-    $st->execute([$memberId, $matchId, $predHome, $predAway]);
+    $st->execute([$memberId, $matchId, $predHome, $predAway, $predWinner]);
 
     $stGet = $pdo->prepare(
-        'SELECT pred_home, pred_away, updated_at
+        'SELECT pred_home, pred_away, pred_winner, updated_at
          FROM PORTAIL_CLUB_cdm_predictions
          WHERE member_id = ? AND match_id = ? LIMIT 1'
     );
@@ -283,40 +347,44 @@ function portailClubCdmUpsertPrediction(PDO $pdo, int $memberId, array $body): a
         portailClubJsonFail('Pronostic introuvable après enregistrement.', 500);
     }
 
+    $winner = isset($row['pred_winner']) ? trim((string)$row['pred_winner']) : '';
+
     return [
         'match_id' => $matchId,
         'pred_home' => (int)$row['pred_home'],
         'pred_away' => (int)$row['pred_away'],
+        'pred_winner' => $winner !== '' ? $winner : null,
         'updated_at' => (string)$row['updated_at'],
     ];
 }
 
-function portailClubCdmMatchWinner(int $home, int $away): int
-{
-    if ($home > $away) {
-        return 1;
-    }
-    if ($home < $away) {
-        return -1;
-    }
-    return 0;
-}
+function portailClubCdmScorePrediction(
+    int $predHome,
+    int $predAway,
+    int $realHome,
+    int $realAway,
+    ?string $predWinner = null,
+    ?string $realWinner = null,
+    string $matchHome = '',
+    string $matchAway = ''
+): float {
+    $predSide = portailClubCdmEffectiveWinnerSide($predHome, $predAway, $predWinner, $matchHome, $matchAway);
+    $realSide = portailClubCdmEffectiveWinnerSide($realHome, $realAway, $realWinner, $matchHome, $matchAway);
 
-function portailClubCdmScorePrediction(int $predHome, int $predAway, int $realHome, int $realAway): float
-{
     if ($predHome === $realHome && $predAway === $realAway) {
+        if ($predHome === $predAway && $predSide !== $realSide) {
+            return 1.0;
+        }
         return 5.0;
     }
 
     $predDiff = $predHome - $predAway;
     $realDiff = $realHome - $realAway;
-    if (portailClubCdmMatchWinner($predHome, $predAway) === portailClubCdmMatchWinner($realHome, $realAway)
-        && $predDiff === $realDiff
-    ) {
+    if ($predSide === $realSide && $predDiff === $realDiff) {
         return 3.0;
     }
 
-    if (portailClubCdmMatchWinner($predHome, $predAway) === portailClubCdmMatchWinner($realHome, $realAway)) {
+    if ($predSide === $realSide) {
         return 1.0;
     }
 
@@ -365,7 +433,7 @@ function portailClubCdmMatchFinalScore(array $match): array
     ];
 }
 
-/** @param array<string, array{pred_home:int,pred_away:int}> $predictionsByMatch */
+/** @param array<string, array{pred_home:int,pred_away:int,pred_winner:?string}> $predictionsByMatch */
 function portailClubCdmComputeMemberStats(array $predictionsByMatch): array
 {
     $data = portailClubCdmLoadTournamentData();
@@ -393,7 +461,11 @@ function portailClubCdmComputeMemberStats(array $predictionsByMatch): array
             (int)$pred['pred_home'],
             (int)$pred['pred_away'],
             $final['home'],
-            $final['away']
+            $final['away'],
+            $pred['pred_winner'] ?? null,
+            portailClubCdmMatchResultWinner($match),
+            (string)($match['home'] ?? ''),
+            (string)($match['away'] ?? '')
         );
         $totalPoints += $pts;
         $scoredCount++;
@@ -426,6 +498,7 @@ function portailClubCdmBuildLeaderboard(PDO $pdo): array
             $predOnly[$matchId] = [
                 'pred_home' => $pred['pred_home'],
                 'pred_away' => $pred['pred_away'],
+                'pred_winner' => $pred['pred_winner'] ?? null,
             ];
         }
         $stats = portailClubCdmComputeMemberStats($predOnly);
@@ -468,6 +541,7 @@ function portailClubCdmBuildMemberScoreboard(PDO $pdo, int $memberId): array
         $predOnly[$matchId] = [
             'pred_home' => $pred['pred_home'],
             'pred_away' => $pred['pred_away'],
+            'pred_winner' => $pred['pred_winner'] ?? null,
         ];
     }
     $stats = portailClubCdmComputeMemberStats($predOnly);
@@ -490,7 +564,7 @@ function portailClubCdmBuildMatchBoard(PDO $pdo, string $matchId): array
     $final = portailClubCdmMatchFinalScore($match);
 
     $st = $pdo->prepare(
-        'SELECT m.id AS member_id, m.pseudo, p.pred_home, p.pred_away
+        'SELECT m.id AS member_id, m.pseudo, p.pred_home, p.pred_away, p.pred_winner
          FROM PORTAIL_CLUB_cdm_predictions p
          INNER JOIN PORTAIL_CLUB_cdm_members m ON m.id = p.member_id
          WHERE p.match_id = ?
@@ -498,18 +572,27 @@ function portailClubCdmBuildMatchBoard(PDO $pdo, string $matchId): array
     );
     $st->execute([$matchId]);
     $entries = [];
+    $matchHome = (string)($match['home'] ?? '');
+    $matchAway = (string)($match['away'] ?? '');
+    $realWinner = portailClubCdmMatchResultWinner($match);
     while ($row = $st->fetch()) {
+        $predWinner = isset($row['pred_winner']) ? trim((string)$row['pred_winner']) : '';
         $pts = portailClubCdmScorePrediction(
             (int)$row['pred_home'],
             (int)$row['pred_away'],
             $final['home'],
-            $final['away']
+            $final['away'],
+            $predWinner !== '' ? $predWinner : null,
+            $realWinner,
+            $matchHome,
+            $matchAway
         );
         $entries[] = [
             'member_id' => (int)$row['member_id'],
             'pseudo' => (string)$row['pseudo'],
             'pred_home' => (int)$row['pred_home'],
             'pred_away' => (int)$row['pred_away'],
+            'pred_winner' => $predWinner !== '' ? $predWinner : null,
             'points' => $pts,
             'label' => portailClubCdmPredictionLabel($pts),
         ];
@@ -577,6 +660,7 @@ function portailClubCdmBuildMemberBoard(PDO $pdo, int $memberId): array
             'result' => $final,
             'pred_home' => (int)$pred['pred_home'],
             'pred_away' => (int)$pred['pred_away'],
+            'pred_winner' => $pred['pred_winner'] ?? null,
             'points' => $pts,
             'label' => portailClubCdmPredictionLabel((float)$pts),
         ];
