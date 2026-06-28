@@ -1,6 +1,6 @@
 {
   "meta": {
-    "updatedAt": "2026-06-28T04:00:08.281Z",
+    "updatedAt": "2026-06-28T06:00:04.350Z",
     "updatedBy": "cloud",
     "sources": [
       "espn.com",
@@ -781,42 +781,42 @@
       "standings": [
         {
           "team": "ARG",
-          "played": 2,
-          "won": 2,
+          "played": 3,
+          "won": 3,
           "drawn": 0,
           "lost": 0,
-          "gf": 5,
-          "ga": 0,
-          "pts": 6
+          "gf": 8,
+          "ga": 1,
+          "pts": 9
         },
         {
           "team": "AUT",
-          "played": 2,
+          "played": 3,
           "won": 1,
-          "drawn": 0,
+          "drawn": 1,
           "lost": 1,
-          "gf": 3,
-          "ga": 3,
-          "pts": 3
+          "gf": 6,
+          "ga": 6,
+          "pts": 4
         },
         {
           "team": "ALG",
-          "played": 2,
+          "played": 3,
           "won": 1,
-          "drawn": 0,
+          "drawn": 1,
           "lost": 1,
-          "gf": 2,
-          "ga": 4,
-          "pts": 3
+          "gf": 5,
+          "ga": 7,
+          "pts": 4
         },
         {
           "team": "JOR",
-          "played": 2,
+          "played": 3,
           "won": 0,
           "drawn": 0,
-          "lost": 2,
-          "gf": 2,
-          "ga": 5,
+          "lost": 3,
+          "gf": 3,
+          "ga": 8,
           "pts": 0
         }
       ]
@@ -2403,9 +2403,9 @@
         "freeToAir": false
       },
       "score": {
-        "home": null,
-        "away": null,
-        "status": "scheduled"
+        "home": 3,
+        "away": 3,
+        "status": "finished"
       }
     },
     {
@@ -2424,9 +2424,9 @@
         "freeToAir": false
       },
       "score": {
-        "home": null,
-        "away": null,
-        "status": "scheduled"
+        "home": 1,
+        "away": 3,
+        "status": "finished"
       }
     },
     {
