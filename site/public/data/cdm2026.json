@@ -1,10 +1,11 @@
 {
   "meta": {
-    "updatedAt": "2026-06-28T06:00:04.350Z",
-    "updatedBy": "cloud",
+    "updatedAt": "2026-06-28T07:02:10.955Z",
+    "updatedBy": "local",
     "sources": [
       "espn.com",
       "fifa.com",
+      "foot01.com",
       "france24.com",
       "franceinfo",
       "fwctimes.com",
@@ -12,6 +13,7 @@
       "matchcalendar.football",
       "openfootball/worldcup.json",
       "ouest-france.fr",
+      "rmcsport.bfmtv.com",
       "skysports.com"
     ],
     "tournament": {
@@ -2491,7 +2493,9 @@
         "home": null,
         "away": null,
         "status": "scheduled"
-      }
+      },
+      "home": "RSA",
+      "away": "CAN"
     },
     {
       "id": "M074",
@@ -2510,7 +2514,9 @@
         "home": null,
         "away": null,
         "status": "scheduled"
-      }
+      },
+      "home": "GER",
+      "away": "PAR"
     },
     {
       "id": "M075",
@@ -2529,7 +2535,9 @@
         "home": null,
         "away": null,
         "status": "scheduled"
-      }
+      },
+      "home": "NED",
+      "away": "MAR"
     },
     {
       "id": "M076",
@@ -2548,7 +2556,9 @@
         "home": null,
         "away": null,
         "status": "scheduled"
-      }
+      },
+      "home": "BRA",
+      "away": "JPN"
     },
     {
       "id": "M077",
@@ -2568,7 +2578,9 @@
         "home": null,
         "away": null,
         "status": "scheduled"
-      }
+      },
+      "home": "FRA",
+      "away": "SWE"
     },
     {
       "id": "M078",
@@ -2587,7 +2599,9 @@
         "home": null,
         "away": null,
         "status": "scheduled"
-      }
+      },
+      "home": "CIV",
+      "away": "NOR"
     },
     {
       "id": "M079",
@@ -2606,7 +2620,9 @@
         "home": null,
         "away": null,
         "status": "scheduled"
-      }
+      },
+      "home": "MEX",
+      "away": "ECU"
     },
     {
       "id": "M080",
@@ -2625,7 +2641,9 @@
         "home": null,
         "away": null,
         "status": "scheduled"
-      }
+      },
+      "home": "ENG",
+      "away": "COD"
     },
     {
       "id": "M081",
@@ -2644,7 +2662,9 @@
         "home": null,
         "away": null,
         "status": "scheduled"
-      }
+      },
+      "home": "USA",
+      "away": "BIH"
     },
     {
       "id": "M082",
@@ -2663,7 +2683,9 @@
         "home": null,
         "away": null,
         "status": "scheduled"
-      }
+      },
+      "home": "BEL",
+      "away": "SEN"
     },
     {
       "id": "M083",
@@ -2682,7 +2704,9 @@
         "home": null,
         "away": null,
         "status": "scheduled"
-      }
+      },
+      "home": "POR",
+      "away": "CRO"
     },
     {
       "id": "M084",
@@ -2701,7 +2725,9 @@
         "home": null,
         "away": null,
         "status": "scheduled"
-      }
+      },
+      "home": "ESP",
+      "away": "AUT"
     },
     {
       "id": "M085",
@@ -2720,7 +2746,9 @@
         "home": null,
         "away": null,
         "status": "scheduled"
-      }
+      },
+      "home": "SUI",
+      "away": "ALG"
     },
     {
       "id": "M086",
@@ -2739,7 +2767,9 @@
         "home": null,
         "away": null,
         "status": "scheduled"
-      }
+      },
+      "home": "ARG",
+      "away": "CPV"
     },
     {
       "id": "M087",
@@ -2758,7 +2788,9 @@
         "home": null,
         "away": null,
         "status": "scheduled"
-      }
+      },
+      "home": "COL",
+      "away": "GHA"
     },
     {
       "id": "M088",
@@ -2777,7 +2809,9 @@
         "home": null,
         "away": null,
         "status": "scheduled"
-      }
+      },
+      "home": "AUS",
+      "away": "EGY"
     },
     {
       "id": "M089",
