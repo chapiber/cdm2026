@@ -709,15 +709,6 @@
     }
     return { matchId, home, away, predWinner };
   }
-    const t = teamByCode(code);
-    if (!t) return '<div class="wc-team"></div>';
-    return (
-      '<div class="wc-team wc-team--' + align + '">' +
-      '<img class="wc-team__flag" src="' + esc(flagUrl(t.flagIso)) + '" alt="" width="40" height="27" loading="lazy">' +
-      '<span class="wc-team__name">' + esc(t.name) + '</span>' +
-      '</div>'
-    );
-  }
 
   function renderMatchCard(m, opts) {
     opts = opts || {};
