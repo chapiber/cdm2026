@@ -7,7 +7,7 @@ declare(strict_types=1);
  *
  * Chaque fichier sql/*.sql est exécuté une seule fois (PORTAIL_CLUB_schema_migrations).
  */
-require_once __DIR__ . '/../../api/cdm2026/lib/db.inc.php';
+require_once __DIR__ . '/../../../api/cdm2026/lib/db.inc.php';
 
 $sqlDir = __DIR__ . '/../sql';
 $files = glob($sqlDir . '/*.sql') ?: [];
