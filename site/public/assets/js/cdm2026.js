@@ -177,6 +177,16 @@
     return KNOCKOUT_STAGES.indexOf(m.stage) >= 0;
   }
 
+  function formatMatchScoreLine(score) {
+    if (!score || score.home == null || score.away == null) return '';
+    let text = score.home + ' – ' + score.away;
+    const pen = score.penalties;
+    if (pen && pen.home != null && pen.away != null && score.home === score.away) {
+      text += ' (' + pen.home + ' – ' + pen.away + ' TAB)';
+    }
+    return text;
+  }
+
   function formatPredScore(pred, m) {
     if (!pred) return '';
     let text = pred.pred_home + ' – ' + pred.pred_away;
@@ -188,6 +198,9 @@
     ) {
       const t = teamByCode(pred.pred_winner);
       text += ' · ' + (t ? t.name : pred.pred_winner);
+      if (pred.pred_pen_home != null && pred.pred_pen_away != null) {
+        text += ' (' + pred.pred_pen_home + '–' + pred.pred_pen_away + ' TAB)';
+      }
     }
     return text;
   }
@@ -586,12 +599,13 @@
   function renderPredictFinishedTeams(m, pred, pts) {
     const realHome = m.score.home;
     const realAway = m.score.away;
+    const scoreLine = formatMatchScoreLine(m.score);
     let html =
       '<div class="wc-predict-result">' +
       '<p class="wc-predict-result__heading">Résultat réel</p>' +
       '<div class="wc-match__teams">' +
       renderTeamSide(m.home, 'home') +
-      '<div class="wc-match__score">' + realHome + ' – ' + realAway + '</div>' +
+      '<div class="wc-match__score">' + esc(scoreLine || (realHome + ' – ' + realAway)) + '</div>' +
       renderTeamSide(m.away, 'away') +
       '</div>';
 
@@ -643,6 +657,8 @@
   function renderPredictWinnerPicker(m, pred, locked) {
     if (!isKnockoutMatch(m) || !matchHasTeams(m) || locked) return '';
     const predWinner = pred && pred.pred_winner ? pred.pred_winner : '';
+    const predPenHome = pred && pred.pred_pen_home != null ? pred.pred_pen_home : '';
+    const predPenAway = pred && pred.pred_pen_away != null ? pred.pred_pen_away : '';
     const showPicker = pred && pred.pred_home === pred.pred_away;
 
     function winnerBtn(code) {
@@ -667,6 +683,13 @@
       winnerBtn(m.home) +
       winnerBtn(m.away) +
       '</div>' +
+      '<div class="wc-predict-penalties">' +
+      '<p class="wc-predict-penalties__label">Score aux tirs au but</p>' +
+      '<div class="wc-predict-penalties__inputs">' +
+      '<input type="number" class="wc-predict-input wc-predict-input--pen" data-match="' + esc(m.id) + '" data-side="pen-home" min="0" max="20" inputmode="numeric" value="' + esc(String(predPenHome)) + '"' + (locked ? ' disabled' : '') + ' aria-label="TAB domicile">' +
+      '<span class="wc-predict-sep">–</span>' +
+      '<input type="number" class="wc-predict-input wc-predict-input--pen" data-match="' + esc(m.id) + '" data-side="pen-away" min="0" max="20" inputmode="numeric" value="' + esc(String(predPenAway)) + '"' + (locked ? ' disabled' : '') + ' aria-label="TAB extérieur">' +
+      '</div></div>' +
       '</div>'
     );
   }
@@ -686,7 +709,25 @@
         btn.setAttribute('aria-pressed', 'false');
         btn.classList.remove('wc-predict-winner__btn--selected');
       });
+      block.querySelectorAll('[data-side="pen-home"], [data-side="pen-away"]').forEach((input) => {
+        input.value = '';
+      });
     }
+  }
+
+  function readPenaltyInputs(card) {
+    const penHomeInput = card.querySelector('[data-side="pen-home"]');
+    const penAwayInput = card.querySelector('[data-side="pen-away"]');
+    if (!penHomeInput || !penAwayInput) return { penHome: null, penAway: null, incomplete: false };
+    if (penHomeInput.value === '' || penAwayInput.value === '') {
+      return { penHome: null, penAway: null, incomplete: true };
+    }
+    const penHome = parseInt(penHomeInput.value, 10);
+    const penAway = parseInt(penAwayInput.value, 10);
+    if (Number.isNaN(penHome) || Number.isNaN(penAway) || penHome < 0 || penHome > 20 || penAway < 0 || penAway > 20) {
+      return { penHome: null, penAway: null, incomplete: true };
+    }
+    return { penHome, penAway, incomplete: false };
   }
 
   function readPredictCard(card) {
@@ -702,12 +743,18 @@
 
     const m = state.data.matches.find((item) => item.id === matchId);
     let predWinner = null;
+    let predPenHome = null;
+    let predPenAway = null;
     if (m && isKnockoutMatch(m) && home === away) {
       const selected = card.querySelector('.wc-predict-winner__btn[aria-pressed="true"]');
-      if (!selected) return { incomplete: true, matchId, home, away };
+      if (!selected) return { incomplete: true, matchId, home, away, reason: 'winner' };
       predWinner = selected.getAttribute('data-winner');
+      const pen = readPenaltyInputs(card);
+      if (pen.incomplete) return { incomplete: true, matchId, home, away, reason: 'penalties' };
+      predPenHome = pen.penHome;
+      predPenAway = pen.penAway;
     }
-    return { matchId, home, away, predWinner };
+    return { matchId, home, away, predWinner, predPenHome, predPenAway };
   }
 
   function renderMatchCard(m, opts) {
@@ -731,7 +778,7 @@
       scoreHtml =
         '<div class="wc-match__teams">' +
         renderTeamSide(m.home, 'home') +
-        '<div class="wc-match__score">' + m.score.home + ' – ' + m.score.away + '</div>' +
+        '<div class="wc-match__score">' + esc(formatMatchScoreLine(m.score)) + '</div>' +
         renderTeamSide(m.away, 'away') +
         '</div>';
     } else {
@@ -745,7 +792,7 @@
 
     if (compact) {
       const t1 = m.label || (teamByCode(m.home)?.name || '?') + ' – ' + (teamByCode(m.away)?.name || '?');
-      const res = finished && m.score.home != null ? m.score.home + '-' + m.score.away : time;
+      const res = finished && m.score.home != null ? formatMatchScoreLine(m.score).replace(' – ', '-') : time;
       return (
         '<div class="wc-mini-match">' +
         '<span class="wc-mini-match__date">' + esc(date.split(' ').slice(1).join(' ')) + '</span>' +
@@ -1224,7 +1271,7 @@
       const board = state.predict.matchBoard;
       const h = teamByCode(board.home);
       const a = teamByCode(board.away);
-      const title = (h ? h.name : board.home) + ' ' + board.result.home + ' – ' + board.result.away + ' ' + (a ? a.name : board.away);
+      const title = (h ? h.name : board.home) + ' ' + formatMatchScoreLine(board.result) + ' ' + (a ? a.name : board.away);
       let table =
         '<p class="wc-board-modal__result"><strong>' + esc(title) + '</strong></p>' +
         '<table class="wc-board-table"><thead><tr>' +
@@ -1350,7 +1397,7 @@
       '<span class="wc-predict-legend__item wc-predict-legend__item--saved">' +
       '<span class="wc-predict-legend__icon" aria-hidden="true">◎</span> Prono en attente</span>' +
       '</div>' +
-      '<p class="wc-predict-knockout-note">Phases finales : si vous pronostiquez un nul, choisissez le vainqueur (prolongations ou tirs au but).</p>';
+      '<p class="wc-predict-knockout-note">Phases finales : si vous pronostiquez un nul, choisissez le vainqueur et le score aux tirs au but.</p>';
 
     if (!dayKeys.length) {
       body += '<div class="wc-empty">Aucun match à pronostiquer.</div>';
@@ -1677,7 +1724,7 @@
     render();
   }
 
-  async function savePrediction(matchId, predHome, predAway, predWinner) {
+  async function savePrediction(matchId, predHome, predAway, predWinner, predPenHome, predPenAway) {
     const token = getMemberToken();
     if (!token) return;
     try {
@@ -1688,6 +1735,10 @@
         pred_away: predAway,
       };
       if (predWinner) payload.pred_winner = predWinner;
+      if (predPenHome != null && predPenAway != null) {
+        payload.pred_pen_home = predPenHome;
+        payload.pred_pen_away = predPenAway;
+      }
       const data = await api('predictions.php', {
         method: 'PUT',
         body: JSON.stringify(payload),
@@ -1697,6 +1748,8 @@
         pred_home: p.pred_home,
         pred_away: p.pred_away,
         pred_winner: p.pred_winner || null,
+        pred_pen_home: p.pred_pen_home != null ? p.pred_pen_home : null,
+        pred_pen_away: p.pred_pen_away != null ? p.pred_pen_away : null,
         updated_at: p.updated_at,
       };
       await loadPredictions();
@@ -1715,11 +1768,22 @@
       const payload = readPredictCard(card);
       if (!payload || payload.incomplete) {
         if (payload && payload.incomplete) {
-          showToast('Choisissez le vainqueur en cas de nul');
+          showToast(
+            payload.reason === 'penalties'
+              ? 'Indiquez le score aux tirs au but'
+              : 'Choisissez le vainqueur en cas de nul'
+          );
         }
         return;
       }
-      savePrediction(payload.matchId, payload.home, payload.away, payload.predWinner);
+      savePrediction(
+        payload.matchId,
+        payload.home,
+        payload.away,
+        payload.predWinner,
+        payload.predPenHome,
+        payload.predPenAway
+      );
     }, 400);
   }
 
@@ -1957,13 +2021,17 @@
       input.addEventListener('input', () => {
         const matchId = input.getAttribute('data-match');
         const card = matchId ? root.querySelector('[data-match-id="' + matchId + '"]') : null;
-        updatePredictWinnerVisibility(card);
+        if (!input.getAttribute('data-side')?.startsWith('pen-')) {
+          updatePredictWinnerVisibility(card);
+        }
         if (matchId) scheduleSave(matchId);
       });
       input.addEventListener('change', () => {
         const matchId = input.getAttribute('data-match');
         const card = matchId ? root.querySelector('[data-match-id="' + matchId + '"]') : null;
-        updatePredictWinnerVisibility(card);
+        if (!input.getAttribute('data-side')?.startsWith('pen-')) {
+          updatePredictWinnerVisibility(card);
+        }
         if (matchId) scheduleSave(matchId);
       });
     });

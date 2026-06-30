@@ -1437,6 +1437,31 @@
   white-space: nowrap;
 }
 
+.wc-predict-penalties {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(0, 40, 104, 0.1);
+}
+
+.wc-predict-penalties__label {
+  margin: 0 0 0.45rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--wc-text);
+}
+
+.wc-predict-penalties__inputs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.wc-predict-input--pen {
+  width: 3.25rem;
+  text-align: center;
+}
+
 .wc-badge--pending {
   background: #e2e8f0;
   color: #475569;

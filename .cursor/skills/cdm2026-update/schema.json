@@ -100,7 +100,15 @@
             "properties": {
               "home": { "type": ["integer", "null"] },
               "away": { "type": ["integer", "null"] },
-              "status": { "enum": ["scheduled", "live", "finished"] }
+              "status": { "enum": ["scheduled", "live", "finished"] },
+              "winner": { "type": "string", "pattern": "^[A-Z]{3}$" },
+              "penalties": {
+                "type": "object",
+                "properties": {
+                  "home": { "type": "integer", "minimum": 0 },
+                  "away": { "type": "integer", "minimum": 0 }
+                }
+              }
             }
           }
         }
