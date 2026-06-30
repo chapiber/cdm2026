@@ -1,6 +1,6 @@
 {
   "meta": {
-    "updatedAt": "2026-06-30T02:00:03.708Z",
+    "updatedAt": "2026-06-30T04:00:03.721Z",
     "updatedBy": "cloud",
     "sources": [
       "espn.com",
@@ -2532,9 +2532,9 @@
         "freeToAir": false
       },
       "score": {
-        "home": null,
-        "away": null,
-        "status": "scheduled"
+        "home": 1,
+        "away": 1,
+        "status": "finished"
       },
       "home": "NED",
       "away": "MAR"
