@@ -1,6 +1,6 @@
 {
   "meta": {
-    "updatedAt": "2026-07-01T06:00:03.293Z",
+    "updatedAt": "2026-07-01T08:00:04.258Z",
     "updatedBy": "cloud",
     "sources": [
       "espn.com",
@@ -2617,9 +2617,9 @@
         "freeToAir": false
       },
       "score": {
-        "home": null,
-        "away": null,
-        "status": "scheduled"
+        "home": 2,
+        "away": 0,
+        "status": "finished"
       },
       "home": "MEX",
       "away": "ECU"
