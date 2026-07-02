@@ -1,7 +1,7 @@
 {
   "meta": {
-    "updatedAt": "2026-07-02T16:00:03.540Z",
-    "updatedBy": "cloud",
+    "updatedAt": "2026-07-02T17:00:00.000Z",
+    "updatedBy": "local",
     "sources": [
       "espn.com",
       "fifa.com",
@@ -2513,7 +2513,11 @@
       "score": {
         "home": 1,
         "away": 1,
-        "status": "finished"
+        "status": "finished",
+        "penalties": {
+          "home": 3,
+          "away": 4
+        }
       },
       "home": "GER",
       "away": "PAR"
@@ -2534,7 +2538,11 @@
       "score": {
         "home": 1,
         "away": 1,
-        "status": "finished"
+        "status": "finished",
+        "penalties": {
+          "home": 2,
+          "away": 3
+        }
       },
       "home": "NED",
       "away": "MAR"
@@ -2680,7 +2688,7 @@
         "freeToAir": false
       },
       "score": {
-        "home": 2,
+        "home": 3,
         "away": 2,
         "status": "finished"
       },
@@ -2820,6 +2828,8 @@
       "kickoffParis": "2026-07-04T23:00:00+02:00",
       "venue": "Lincoln Financial Field",
       "city": "Philadelphia",
+      "home": "PAR",
+      "away": "FRA",
       "tv": {
         "channels": [
           "M6",
@@ -2840,6 +2850,8 @@
       "kickoffParis": "2026-07-04T19:00:00+02:00",
       "venue": "NRG Stadium",
       "city": "Houston",
+      "home": "CAN",
+      "away": "MAR",
       "tv": {
         "channels": [
           "beIN Sports 1"
@@ -2859,6 +2871,8 @@
       "kickoffParis": "2026-07-05T22:00:00+02:00",
       "venue": "MetLife Stadium",
       "city": "New York",
+      "home": "BRA",
+      "away": "NOR",
       "tv": {
         "channels": [
           "M6",
@@ -2879,6 +2893,8 @@
       "kickoffParis": "2026-07-06T02:00:00+02:00",
       "venue": "Estadio Azteca",
       "city": "Mexico City",
+      "home": "MEX",
+      "away": "ENG",
       "tv": {
         "channels": [
           "beIN Sports 1"
@@ -2917,6 +2933,8 @@
       "kickoffParis": "2026-07-07T02:00:00+02:00",
       "venue": "Lumen Field",
       "city": "Seattle",
+      "home": "USA",
+      "away": "BEL",
       "tv": {
         "channels": [
           "beIN Sports 1"
