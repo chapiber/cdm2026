@@ -926,7 +926,7 @@
   }
 
   function getMatchesForDateKey(dateKey) {
-    return state.data.matches.filter((m) => formatKickoff(m.kickoffParis).dateKey === dateKey);
+    return getSortedMatches().filter((m) => formatKickoff(m.kickoffParis).dateKey === dateKey);
   }
 
   function addDaysToParisDateKey(dateKey, days) {
@@ -1479,7 +1479,7 @@
     });
     chips += '</div>';
 
-    const matches = state.data.matches.filter((m) => m.home === code || m.away === code);
+    const matches = getSortedMatches().filter((m) => m.home === code || m.away === code);
     const t = teamByCode(code);
     const title = t ? 'Calendrier — ' + t.name : 'Calendrier équipe';
 
@@ -1541,7 +1541,7 @@
     });
     table += '</tbody></table>';
 
-    const groupMatches = state.data.matches.filter((m) => m.group === gid);
+    const groupMatches = getSortedMatches().filter((m) => m.group === gid);
     table += '<p class="wc-group-matches__title">Résultats</p>';
     groupMatches.forEach((m) => {
       table += renderMatchCard(m, { compact: true });
