@@ -1,7 +1,7 @@
 {
   "meta": {
-    "updatedAt": "2026-07-04T10:00:04.033Z",
-    "updatedBy": "cloud",
+    "updatedAt": "2026-07-04T10:30:00.000Z",
+    "updatedBy": "local",
     "sources": [
       "espn.com",
       "fifa.com",
@@ -2772,8 +2772,8 @@
         "freeToAir": false
       },
       "score": {
-        "home": 1,
-        "away": 1,
+        "home": 3,
+        "away": 2,
         "status": "finished"
       },
       "home": "ARG",
@@ -2816,7 +2816,11 @@
       "score": {
         "home": 1,
         "away": 1,
-        "status": "finished"
+        "status": "finished",
+        "penalties": {
+          "home": 2,
+          "away": 4
+        }
       },
       "home": "AUS",
       "away": "EGY"
@@ -2854,9 +2858,10 @@
       "away": "MAR",
       "tv": {
         "channels": [
+          "M6",
           "beIN Sports 1"
         ],
-        "freeToAir": false
+        "freeToAir": true
       },
       "score": {
         "home": null,
@@ -2914,6 +2919,8 @@
       "kickoffParis": "2026-07-06T21:00:00+02:00",
       "venue": "AT&T Stadium",
       "city": "Dallas",
+      "home": "POR",
+      "away": "ESP",
       "tv": {
         "channels": [
           "beIN Sports 1"
@@ -2954,6 +2961,8 @@
       "kickoffParis": "2026-07-07T18:00:00+02:00",
       "venue": "Mercedes-Benz Stadium",
       "city": "Atlanta",
+      "home": "ARG",
+      "away": "EGY",
       "tv": {
         "channels": [
           "beIN Sports 1"
@@ -2973,6 +2982,8 @@
       "kickoffParis": "2026-07-07T22:00:00+02:00",
       "venue": "BC Place",
       "city": "Vancouver",
+      "home": "SUI",
+      "away": "COL",
       "tv": {
         "channels": [
           "beIN Sports 1"
