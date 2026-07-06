@@ -1467,6 +1467,17 @@
   color: #475569;
 }
 
+.wc-badge--deduced {
+  background: rgba(0, 104, 71, 0.14);
+  color: var(--wc-mex-green);
+}
+
+.wc-team--tbd .wc-team__name--tbd {
+  color: var(--wc-muted);
+  font-weight: 500;
+  font-size: 0.78rem;
+}
+
 .wc-badge--locked {
   background: #fef3c7;
   color: #92400e;

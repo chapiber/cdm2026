@@ -1,6 +1,6 @@
 {
   "meta": {
-    "updatedAt": "2026-07-06T06:00:03.765Z",
+    "updatedAt": "2026-07-06T07:28:50.709Z",
     "updatedBy": "cloud",
     "sources": [
       "espn.com",
@@ -3014,7 +3014,9 @@
         "home": null,
         "away": null,
         "status": "scheduled"
-      }
+      },
+      "home": "FRA",
+      "away": "MAR"
     },
     {
       "id": "M098",
@@ -3053,7 +3055,9 @@
         "home": null,
         "away": null,
         "status": "scheduled"
-      }
+      },
+      "home": "NOR",
+      "away": "ENG"
     },
     {
       "id": "M100",

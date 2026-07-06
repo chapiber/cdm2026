@@ -23,6 +23,26 @@
 
   const KNOCKOUT_STAGES = ['round32', 'round16', 'quarter', 'semi', 'third', 'final'];
 
+  /** Arbre 8es → finale (aligné sur CursorAutomation/knockout_bracket.py) */
+  const KNOCKOUT_BRACKET = {
+    M089: { home: ['winner', 'M074'], away: ['winner', 'M077'] },
+    M090: { home: ['winner', 'M073'], away: ['winner', 'M075'] },
+    M091: { home: ['winner', 'M076'], away: ['winner', 'M078'] },
+    M092: { home: ['winner', 'M079'], away: ['winner', 'M080'] },
+    M093: { home: ['winner', 'M083'], away: ['winner', 'M084'] },
+    M094: { home: ['winner', 'M081'], away: ['winner', 'M082'] },
+    M095: { home: ['winner', 'M086'], away: ['winner', 'M088'] },
+    M096: { home: ['winner', 'M085'], away: ['winner', 'M087'] },
+    M097: { home: ['winner', 'M089'], away: ['winner', 'M090'] },
+    M098: { home: ['winner', 'M093'], away: ['winner', 'M094'] },
+    M099: { home: ['winner', 'M091'], away: ['winner', 'M092'] },
+    M100: { home: ['winner', 'M095'], away: ['winner', 'M096'] },
+    M101: { home: ['winner', 'M097'], away: ['winner', 'M098'] },
+    M102: { home: ['winner', 'M099'], away: ['winner', 'M100'] },
+    M103: { home: ['loser', 'M101'], away: ['loser', 'M102'] },
+    M104: { home: ['winner', 'M101'], away: ['winner', 'M102'] },
+  };
+
   const root = document.getElementById('wc-root');
   const toastEl = document.getElementById('wc-toast');
 
@@ -170,7 +190,15 @@
   }
 
   function isFranceMatch(m) {
-    return m.home === 'FRA' || m.away === 'FRA';
+    if (m.home === 'FRA' || m.away === 'FRA') return true;
+    const eff = effectiveMatchTeams(m);
+    if (eff.home === 'FRA' || eff.away === 'FRA') return true;
+    const bracket = KNOCKOUT_BRACKET[m.id];
+    if (bracket) {
+      const parents = [matchById(bracket.home[1]), matchById(bracket.away[1])];
+      return parents.some((p) => p && (p.home === 'FRA' || p.away === 'FRA'));
+    }
+    return false;
   }
 
   function isKnockoutMatch(m) {
@@ -207,6 +235,102 @@
 
   function matchHasTeams(m) {
     return !!(m.home && m.away);
+  }
+
+  function matchById(id) {
+    if (!state.data) return null;
+    return state.data.matches.find((m) => m.id === id) || null;
+  }
+
+  function matchHasFinalScore(m) {
+    const score = m && m.score;
+    return !!(score && score.status === 'finished' && score.home != null && score.away != null);
+  }
+
+  /** Vainqueur d'un match terminé (score, winner explicite ou TAB). */
+  function matchWinnerCode(m) {
+    if (!matchHasFinalScore(m)) return null;
+    const score = m.score;
+    const homeCode = (m.home || '').toUpperCase();
+    const awayCode = (m.away || '').toUpperCase();
+    if (!homeCode || !awayCode) return null;
+    const h = Number(score.home);
+    const a = Number(score.away);
+    if (h > a) return homeCode;
+    if (a > h) return awayCode;
+    const explicit = (score.winner || '').toUpperCase();
+    if (explicit === homeCode || explicit === awayCode) return explicit;
+    const pen = score.penalties;
+    if (!pen || pen.home == null || pen.away == null) return null;
+    if (Number(pen.home) > Number(pen.away)) return homeCode;
+    if (Number(pen.away) > Number(pen.home)) return awayCode;
+    return null;
+  }
+
+  function matchLoserCode(m) {
+    const winner = matchWinnerCode(m);
+    if (!winner) return null;
+    const homeCode = (m.home || '').toUpperCase();
+    const awayCode = (m.away || '').toUpperCase();
+    if (winner === homeCode) return awayCode;
+    if (winner === awayCode) return homeCode;
+    return null;
+  }
+
+  function resolveKnockoutSlot(role, parentId) {
+    const parent = matchById(parentId);
+    if (!parent) return null;
+    return role === 'winner' ? matchWinnerCode(parent) : matchLoserCode(parent);
+  }
+
+  /** Équipes déduites côté affichage quand les parents sont terminés. */
+  function resolveKnockoutTeams(m) {
+    const bracket = KNOCKOUT_BRACKET[m.id];
+    if (!bracket) return null;
+    const home = resolveKnockoutSlot(bracket.home[0], bracket.home[1]);
+    const away = resolveKnockoutSlot(bracket.away[0], bracket.away[1]);
+    if (!home && !away) return null;
+    return { home: home || null, away: away || null };
+  }
+
+  function teamShortName(code) {
+    if (!code) return null;
+    const t = teamByCode(code);
+    return t ? t.name : code;
+  }
+
+  /** Libellé enrichi : affiche 8es parente ou vainqueur si match terminé. */
+  function formatKnockoutFeedSide(role, parentId) {
+    const parent = matchById(parentId);
+    if (!parent || !parent.home || !parent.away) return null;
+    if (role === 'winner') {
+      const code = matchWinnerCode(parent);
+      if (code) return teamShortName(code);
+    } else {
+      const code = matchLoserCode(parent);
+      if (code) return teamShortName(code);
+    }
+    const h = teamShortName(parent.home);
+    const a = teamShortName(parent.away);
+    return '8es ' + h + ' – ' + a;
+  }
+
+  function getKnockoutDisplayLabel(m) {
+    const bracket = KNOCKOUT_BRACKET[m.id];
+    if (!bracket) return m.label || 'Match à déterminer';
+    const homeSide = formatKnockoutFeedSide(bracket.home[0], bracket.home[1]);
+    const awaySide = formatKnockoutFeedSide(bracket.away[0], bracket.away[1]);
+    if (homeSide && awaySide) return homeSide + ' vs ' + awaySide;
+    return m.label || 'Match à déterminer';
+  }
+
+  function effectiveMatchTeams(m) {
+    if (matchHasTeams(m)) return { home: m.home, away: m.away, deduced: false };
+    const resolved = resolveKnockoutTeams(m);
+    if (resolved && resolved.home && resolved.away) {
+      return { home: resolved.home, away: resolved.away, deduced: true };
+    }
+    return { home: m.home || null, away: m.away || null, deduced: false };
   }
 
   function isMatchLocked(m) {
@@ -645,11 +769,46 @@
 
   function renderTeamSide(code, align) {
     const t = teamByCode(code);
-    if (!t) return '<div class="wc-team"></div>';
+    if (!t) {
+      if (!code) {
+        return (
+          '<div class="wc-team wc-team--' + align + ' wc-team--tbd">' +
+          '<span class="wc-team__name wc-team__name--tbd">À déterminer</span>' +
+          '</div>'
+        );
+      }
+      return '<div class="wc-team"></div>';
+    }
     return (
       '<div class="wc-team wc-team--' + align + '">' +
       '<img class="wc-team__flag" src="' + esc(flagUrl(t.flagIso)) + '" alt="" width="40" height="27" loading="lazy">' +
       '<span class="wc-team__name">' + esc(t.name) + '</span>' +
+      '</div>'
+    );
+  }
+
+  function renderMatchTeamsBlock(m) {
+    const finished = m.score && m.score.status === 'finished';
+    const display = effectiveMatchTeams(m);
+    const hasBoth = !!(display.home && display.away);
+    if (!hasBoth) {
+      const label = isKnockoutMatch(m) ? getKnockoutDisplayLabel(m) : m.label || 'Match à déterminer';
+      return '<div class="wc-match__label">' + esc(label) + '</div>';
+    }
+    if (finished && m.score.home != null) {
+      return (
+        '<div class="wc-match__teams">' +
+        renderTeamSide(display.home, 'home') +
+        '<div class="wc-match__score">' + esc(formatMatchScoreLine(m.score)) + '</div>' +
+        renderTeamSide(display.away, 'away') +
+        '</div>'
+      );
+    }
+    return (
+      '<div class="wc-match__teams">' +
+      renderTeamSide(display.home, 'home') +
+      '<div class="wc-match__score wc-match__score--vs">vs</div>' +
+      renderTeamSide(display.away, 'away') +
       '</div>'
     );
   }
@@ -771,27 +930,16 @@
     if (live) cls += ' wc-match--live';
     if (finished) cls += ' wc-match--finished';
 
-    let scoreHtml;
-    if (m.label && !m.home && !m.away) {
-      scoreHtml = '<div class="wc-match__label">' + esc(m.label) + '</div>';
-    } else if (finished && m.score.home != null) {
-      scoreHtml =
-        '<div class="wc-match__teams">' +
-        renderTeamSide(m.home, 'home') +
-        '<div class="wc-match__score">' + esc(formatMatchScoreLine(m.score)) + '</div>' +
-        renderTeamSide(m.away, 'away') +
-        '</div>';
-    } else {
-      scoreHtml =
-        '<div class="wc-match__teams">' +
-        renderTeamSide(m.home, 'home') +
-        '<div class="wc-match__score wc-match__score--vs">vs</div>' +
-        renderTeamSide(m.away, 'away') +
-        '</div>';
-    }
+    let scoreHtml = renderMatchTeamsBlock(m);
 
     if (compact) {
-      const t1 = m.label || (teamByCode(m.home)?.name || '?') + ' – ' + (teamByCode(m.away)?.name || '?');
+      const eff = effectiveMatchTeams(m);
+      const t1 =
+        eff.home && eff.away
+          ? (teamByCode(eff.home)?.name || eff.home) + ' – ' + (teamByCode(eff.away)?.name || eff.away)
+          : isKnockoutMatch(m)
+            ? getKnockoutDisplayLabel(m)
+            : m.label || 'À déterminer';
       const res = finished && m.score.home != null ? formatMatchScoreLine(m.score).replace(' – ', '-') : time;
       return (
         '<div class="wc-mini-match">' +
@@ -804,6 +952,11 @@
 
     let badges = '';
     if (fra) badges += '<span class="wc-badge wc-badge--fra">Bleus</span>';
+    const effTeams = effectiveMatchTeams(m);
+    if (effTeams.deduced) badges += '<span class="wc-badge wc-badge--deduced">Affiche déduite</span>';
+    else if (isKnockoutMatch(m) && !matchHasTeams(m) && !effTeams.home) {
+      badges += '<span class="wc-badge wc-badge--pending">Équipes à déterminer</span>';
+    }
     if (live) badges += '<span class="wc-badge wc-badge--live">En direct</span>';
     if (finished) badges += '<span class="wc-badge wc-badge--done">Terminé</span>';
 
@@ -880,7 +1033,7 @@
 
     let teamsHtml;
     if (!hasTeams) {
-      teamsHtml = '<div class="wc-match__label">' + esc(m.label || 'Match à déterminer') + '</div>';
+      teamsHtml = '<div class="wc-match__label">' + esc(getKnockoutDisplayLabel(m)) + '</div>';
     } else if (finished && m.score.home != null) {
       teamsHtml = renderPredictFinishedTeams(m, pred, pts);
     } else {
@@ -927,6 +1080,15 @@
 
   function getMatchesForDateKey(dateKey) {
     return getSortedMatches().filter((m) => formatKickoff(m.kickoffParis).dateKey === dateKey);
+  }
+
+  function getUpcomingMatchDayKeys(fromDateKey) {
+    const keys = new Set();
+    getSortedMatches().forEach((m) => {
+      const dk = formatKickoff(m.kickoffParis).dateKey;
+      if (dk > fromDateKey) keys.add(dk);
+    });
+    return [...keys].sort();
   }
 
   function addDaysToParisDateKey(dateKey, days) {
@@ -1165,14 +1327,16 @@
     }
     body += '</section>';
 
-    for (let offset = 1; offset <= 5; offset += 1) {
-      const dayKey = addDaysToParisDateKey(todayKey, offset);
+    const upcomingDays = getUpcomingMatchDayKeys(todayKey);
+    for (let i = 0; i < upcomingDays.length; i += 1) {
+      const dayKey = upcomingDays[i];
       const dayMatches = getMatchesForDateKey(dayKey);
       if (!dayMatches.length) continue;
+      const offset = getPredictDayOffset(dayKey, todayKey);
       const sectionId = 'wc-day-' + dayKey;
       body +=
-        '<section class="wc-day-block wc-day-block--later wc-day-block--d' + offset + '" aria-labelledby="' + sectionId + '">' +
-        '<h2 id="' + sectionId + '" class="wc-section-title wc-section-title--day wc-section-title--d' + offset + '">' +
+        '<section class="wc-day-block wc-day-block--later wc-day-block--d' + Math.min(offset, 5) + '" aria-labelledby="' + sectionId + '">' +
+        '<h2 id="' + sectionId + '" class="wc-section-title wc-section-title--day wc-section-title--d' + Math.min(offset, 5) + '">' +
         esc(formatDaySectionTitle(dayKey, offset)) +
         '</h2>' +
         '<div class="wc-day-block__matches">' +
@@ -1182,7 +1346,7 @@
 
     if (!todayMatches.length && body.indexOf('wc-match') < 0) {
       body +=
-        '<div class="wc-empty">Aucun match à venir sur les 5 prochains jours.<br>Consultez le calendrier par équipe ou les poules.</div>';
+        '<div class="wc-empty">Aucun match à venir.<br>Consultez le calendrier par équipe ou les poules.</div>';
     }
 
     return body;
