@@ -61,6 +61,7 @@
       scoredCount: 0,
       leaderboardOpen: false,
       leaderboard: [],
+      leaderboardMode: 'total',
       myMemberId: null,
       leaderboardLoading: false,
       scrollToFocus: false,
@@ -107,6 +108,34 @@
     const n = Number(pts);
     if (Number.isNaN(n)) return '0';
     return Number.isInteger(n) ? String(n) : n.toFixed(1).replace('.', ',');
+  }
+
+  function sortLeaderboardByMode(rows, mode) {
+    const copy = rows.slice();
+    if (mode === 'avg') {
+      copy.sort((a, b) => {
+        const ra = a.rank_avg || 999;
+        const rb = b.rank_avg || 999;
+        return ra - rb;
+      });
+      return copy;
+    }
+    copy.sort((a, b) => {
+      const ra = a.rank_total || a.rank || 999;
+      const rb = b.rank_total || b.rank || 999;
+      return ra - rb;
+    });
+    return copy;
+  }
+
+  function leaderboardRowRank(row, mode) {
+    if (mode === 'avg') return row.rank_avg || '—';
+    return row.rank_total || row.rank || '—';
+  }
+
+  function leaderboardRowPoints(row, mode) {
+    if (mode === 'avg') return formatPoints(row.avg_points) + ' pts/m';
+    return formatPoints(row.total_points) + ' pts';
   }
 
   function getMemberToken() {
@@ -1579,41 +1608,64 @@
   function renderLeaderboardModal() {
     if (!state.predict.leaderboardOpen) return '';
 
+    const mode = state.predict.leaderboardMode || 'total';
     let inner;
     if (state.predict.leaderboardLoading) {
       inner = '<div class="wc-loading">Chargement du classement…</div>';
     } else if (!state.predict.leaderboard.length) {
       inner = '<p class="wc-empty">Aucun joueur inscrit pour le moment.</p>';
     } else {
-      const top3 = state.predict.leaderboard.slice(0, 3);
+      const sorted = sortLeaderboardByMode(state.predict.leaderboard, mode);
+      const top3 = sorted.slice(0, 3);
+      const ptsColLabel = mode === 'avg' ? 'Moy.' : 'Pts';
+
+      const tabs =
+        '<div class="wc-leaderboard-tabs" role="tablist" aria-label="Type de classement">' +
+        '<button type="button" class="wc-leaderboard-tabs__btn' + (mode === 'total' ? ' wc-leaderboard-tabs__btn--active' : '') +
+        '" role="tab" aria-selected="' + (mode === 'total' ? 'true' : 'false') +
+        '" data-action="leaderboard-mode" data-mode="total">Points totaux</button>' +
+        '<button type="button" class="wc-leaderboard-tabs__btn' + (mode === 'avg' ? ' wc-leaderboard-tabs__btn--active' : '') +
+        '" role="tab" aria-selected="' + (mode === 'avg' ? 'true' : 'false') +
+        '" data-action="leaderboard-mode" data-mode="avg">Moyenne / match</button>' +
+        '</div>' +
+        '<p class="wc-leaderboard-tabs__hint">' +
+        (mode === 'total'
+          ? 'Somme de tous les points sur les matchs pronostiqués et notés.'
+          : 'Points moyens par match noté — équitable quel que soit le nombre de pronos.') +
+        '</p>';
+
       let podium = '<div class="wc-podium">';
       top3.forEach((row, i) => {
         podium +=
           '<div class="wc-podium__item wc-podium__item--' + (i + 1) + '">' +
-          '<span class="wc-podium__rank">' + row.rank + '</span>' +
+          '<span class="wc-podium__rank">' + leaderboardRowRank(row, mode) + '</span>' +
           '<span class="wc-podium__name">' + esc(row.display_name) + '</span>' +
-          '<span class="wc-podium__pts">' + esc(formatPoints(row.total_points)) + ' pts</span>' +
+          '<span class="wc-podium__pts">' + esc(leaderboardRowPoints(row, mode)) + '</span>' +
           '</div>';
       });
       podium += '</div>';
 
       let table =
         '<table class="wc-leaderboard"><thead><tr>' +
-        '<th>#</th><th>Joueur</th><th>Pts</th><th>Pronos</th><th>Notés</th>' +
+        '<th>#</th><th>Joueur</th><th>' + ptsColLabel + '</th><th>Pronos</th><th>Notés</th>' +
         '</tr></thead><tbody>';
-      state.predict.leaderboard.forEach((row) => {
+      sorted.forEach((row) => {
         const mine = row.id === state.predict.myMemberId ? ' wc-leaderboard__row--me' : '';
+        const ptsCell =
+          mode === 'avg'
+            ? '<strong>' + esc(formatPoints(row.avg_points)) + '</strong> <span class="wc-leaderboard__pts-unit">/ match</span>'
+            : '<strong>' + esc(formatPoints(row.total_points)) + '</strong>';
         table +=
           '<tr class="wc-leaderboard__row' + mine + '" data-action="member-board" data-member-id="' + row.id + '" tabindex="0" role="button">' +
-          '<td>' + row.rank + '</td>' +
+          '<td>' + leaderboardRowRank(row, mode) + '</td>' +
           '<td>' + esc(row.display_name) + '</td>' +
-          '<td><strong>' + esc(formatPoints(row.total_points)) + '</strong></td>' +
+          '<td>' + ptsCell + '</td>' +
           '<td>' + row.predicted_count + '</td>' +
           '<td>' + row.scored_count + '</td>' +
           '</tr>';
       });
       table += '</tbody></table>';
-      inner = podium + table;
+      inner = tabs + podium + table;
     }
 
     return (
@@ -1621,7 +1673,7 @@
       '<div class="wc-leaderboard-modal__backdrop" data-action="close-leaderboard"></div>' +
       '<div class="wc-leaderboard-modal__panel">' +
       '<div class="wc-leaderboard-modal__head">' +
-      '<h2 id="wc-leaderboard-title" class="wc-leaderboard-modal__title">Synthèse du classement</h2>' +
+      '<h2 id="wc-leaderboard-title" class="wc-leaderboard-modal__title">Classement pronos</h2>' +
       '<button type="button" class="wc-leaderboard-modal__close" data-action="close-leaderboard" aria-label="Fermer">×</button>' +
       '</div>' +
       '<div class="wc-leaderboard-modal__body">' + inner + '</div>' +
@@ -2118,6 +2170,16 @@
 
     root.querySelectorAll('[data-action="close-leaderboard"]').forEach((el) => {
       el.addEventListener('click', () => closeLeaderboard());
+    });
+
+    root.querySelectorAll('[data-action="leaderboard-mode"]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const nextMode = btn.getAttribute('data-mode');
+        if (nextMode === 'total' || nextMode === 'avg') {
+          state.predict.leaderboardMode = nextMode;
+          render();
+        }
+      });
     });
 
     root.querySelectorAll('[data-action="match-board"]').forEach((btn) => {

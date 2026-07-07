@@ -590,12 +590,50 @@ function portailClubCdmComputeMemberStats(array $predictionsByMatch): array
         $matchPoints[$matchId] = $pts;
     }
 
+    $avgPoints = $scoredCount > 0 ? round($totalPoints / $scoredCount, 2) : 0.0;
+
     return [
         'total_points' => round($totalPoints, 1),
+        'avg_points' => $avgPoints,
         'predicted_count' => $predictedCount,
         'scored_count' => $scoredCount,
         'match_points' => $matchPoints,
     ];
+}
+
+/**
+ * Attribue des rangs (1 = meilleur) selon une métrique numérique décroissante.
+ *
+ * @param list<array<string, mixed>> $rows
+ * @return list<int>
+ */
+function portailClubCdmLeaderboardRanks(array $rows, string $metric): array
+{
+    $indexed = [];
+    foreach ($rows as $i => $row) {
+        $indexed[] = [
+            'i' => $i,
+            'pseudo' => (string)($row['pseudo'] ?? ''),
+            'value' => (float)($row[$metric] ?? 0),
+        ];
+    }
+
+    usort(
+        $indexed,
+        static function (array $a, array $b): int {
+            if ($a['value'] !== $b['value']) {
+                return $b['value'] <=> $a['value'];
+            }
+            return strcmp($a['pseudo'], $b['pseudo']);
+        }
+    );
+
+    $ranks = array_fill(0, count($rows), 0);
+    foreach ($indexed as $rank => $item) {
+        $ranks[$item['i']] = $rank + 1;
+    }
+
+    return $ranks;
 }
 
 /** @return list<array<string, mixed>> */
@@ -627,27 +665,27 @@ function portailClubCdmBuildLeaderboard(PDO $pdo): array
             'pseudo' => (string)$member['pseudo'],
             'display_name' => (string)$member['pseudo'],
             'total_points' => $stats['total_points'],
+            'avg_points' => $stats['avg_points'],
             'predicted_count' => $stats['predicted_count'],
             'scored_count' => $stats['scored_count'],
         ];
     }
 
+    $rankTotal = portailClubCdmLeaderboardRanks($rows, 'total_points');
+    $rankAvg = portailClubCdmLeaderboardRanks($rows, 'avg_points');
+    foreach ($rows as $i => &$row) {
+        $row['rank_total'] = $rankTotal[$i];
+        $row['rank_avg'] = $rankAvg[$i];
+        $row['rank'] = $rankTotal[$i];
+    }
+    unset($row);
+
     usort(
         $rows,
         static function (array $a, array $b): int {
-            if ($a['total_points'] !== $b['total_points']) {
-                return $b['total_points'] <=> $a['total_points'];
-            }
-            return strcmp($a['pseudo'], $b['pseudo']);
+            return ($a['rank_total'] ?? 0) <=> ($b['rank_total'] ?? 0);
         }
     );
-
-    $rank = 1;
-    foreach ($rows as $i => &$row) {
-        $row['rank'] = $rank;
-        $rank++;
-    }
-    unset($row);
 
     return $rows;
 }
@@ -670,6 +708,7 @@ function portailClubCdmBuildMemberScoreboard(PDO $pdo, int $memberId): array
     return [
         'predictions' => $predictions,
         'total_points' => $stats['total_points'],
+        'avg_points' => $stats['avg_points'],
         'predicted_count' => $stats['predicted_count'],
         'scored_count' => $stats['scored_count'],
         'match_points' => $stats['match_points'],
