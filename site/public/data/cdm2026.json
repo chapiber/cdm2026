@@ -1,6 +1,6 @@
 {
   "meta": {
-    "updatedAt": "2026-07-08T04:00:05.058Z",
+    "updatedAt": "2026-07-08T05:32:00.000Z",
     "updatedBy": "cloud",
     "sources": [
       "espn.com",
@@ -2993,7 +2993,11 @@
       "score": {
         "home": 0,
         "away": 0,
-        "status": "finished"
+        "status": "finished",
+        "penalties": {
+          "home": 4,
+          "away": 3
+        }
       }
     },
     {
@@ -3035,7 +3039,9 @@
         "home": null,
         "away": null,
         "status": "scheduled"
-      }
+      },
+      "home": "ESP",
+      "away": "BEL"
     },
     {
       "id": "M099",
@@ -3076,7 +3082,9 @@
         "home": null,
         "away": null,
         "status": "scheduled"
-      }
+      },
+      "home": "ARG",
+      "away": "SUI"
     },
     {
       "id": "M101",
