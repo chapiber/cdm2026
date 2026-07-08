@@ -1,6 +1,6 @@
 {
   "meta": {
-    "updatedAt": "2026-07-07T22:00:04.695Z",
+    "updatedAt": "2026-07-08T00:00:03.510Z",
     "updatedBy": "cloud",
     "sources": [
       "espn.com",
@@ -2991,9 +2991,9 @@
         "freeToAir": false
       },
       "score": {
-        "home": null,
-        "away": null,
-        "status": "scheduled"
+        "home": 0,
+        "away": 0,
+        "status": "finished"
       }
     },
     {
