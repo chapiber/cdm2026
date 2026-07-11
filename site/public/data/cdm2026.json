@@ -1,8 +1,9 @@
 {
   "meta": {
-    "updatedAt": "2026-07-11T06:00:04.685Z",
-    "updatedBy": "cloud",
+    "updatedAt": "2026-07-11T07:15:00.000Z",
+    "updatedBy": "manual",
     "sources": [
+      "cnews.fr",
       "espn.com",
       "fifa.com",
       "foot01.com",
@@ -10,11 +11,13 @@
       "franceinfo",
       "fwctimes.com",
       "lequipe",
+      "lequipe.fr",
       "matchcalendar.football",
       "openfootball/worldcup.json",
       "ouest-france.fr",
       "rmcsport.bfmtv.com",
-      "skysports.com"
+      "skysports.com",
+      "sofoot.com"
     ],
     "tournament": {
       "start": "2026-06-11",
@@ -3104,7 +3107,9 @@
         "home": null,
         "away": null,
         "status": "scheduled"
-      }
+      },
+      "home": "FRA",
+      "away": "ESP"
     },
     {
       "id": "M102",
