@@ -1,6 +1,6 @@
 {
   "meta": {
-    "updatedAt": "2026-07-11T22:00:04.566Z",
+    "updatedAt": "2026-07-12T00:00:03.480Z",
     "updatedBy": "cloud",
     "sources": [
       "cnews.fr",
@@ -3061,9 +3061,9 @@
         "freeToAir": true
       },
       "score": {
-        "home": null,
-        "away": null,
-        "status": "scheduled"
+        "home": 1,
+        "away": 1,
+        "status": "finished"
       },
       "home": "NOR",
       "away": "ENG"
