@@ -1,7 +1,7 @@
 {
   "meta": {
-    "updatedAt": "2026-07-14T04:00:04.497Z",
-    "updatedBy": "cloud",
+    "updatedAt": "2026-07-14T05:22:00.000Z",
+    "updatedBy": "manual",
     "sources": [
       "cnews.fr",
       "espn.com",
@@ -3062,7 +3062,7 @@
       },
       "score": {
         "home": 1,
-        "away": 1,
+        "away": 2,
         "status": "finished"
       },
       "home": "NOR",
@@ -3082,7 +3082,7 @@
         "freeToAir": false
       },
       "score": {
-        "home": 1,
+        "home": 3,
         "away": 1,
         "status": "finished"
       },
@@ -3129,7 +3129,9 @@
         "home": null,
         "away": null,
         "status": "scheduled"
-      }
+      },
+      "home": "ENG",
+      "away": "ARG"
     },
     {
       "id": "M103",
