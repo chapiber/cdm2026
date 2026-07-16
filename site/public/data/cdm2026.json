@@ -1,6 +1,6 @@
 {
   "meta": {
-    "updatedAt": "2026-07-14T05:22:00.000Z",
+    "updatedAt": "2026-07-16T05:24:04.293Z",
     "updatedBy": "manual",
     "sources": [
       "cnews.fr",
@@ -3104,9 +3104,9 @@
         "freeToAir": true
       },
       "score": {
-        "home": null,
-        "away": null,
-        "status": "scheduled"
+        "home": 0,
+        "away": 2,
+        "status": "finished"
       },
       "home": "FRA",
       "away": "ESP"
@@ -3126,9 +3126,9 @@
         "freeToAir": true
       },
       "score": {
-        "home": null,
-        "away": null,
-        "status": "scheduled"
+        "home": 1,
+        "away": 2,
+        "status": "finished"
       },
       "home": "ENG",
       "away": "ARG"
@@ -3151,7 +3151,9 @@
         "home": null,
         "away": null,
         "status": "scheduled"
-      }
+      },
+      "home": "FRA",
+      "away": "ENG"
     },
     {
       "id": "M104",
@@ -3171,7 +3173,9 @@
         "home": null,
         "away": null,
         "status": "scheduled"
-      }
+      },
+      "home": "ESP",
+      "away": "ARG"
     }
   ]
 }
